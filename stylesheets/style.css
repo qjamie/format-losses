@@ -1,0 +1,57 @@
+* {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    margin: 10px;
+}
+
+body {
+    background: whitesmoke;
+    background-size: cover;
+    padding: 20px;
+    margin: 0 auto;
+}
+
+header, main {
+    text-align: center;
+}
+
+a {
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    transition: 0.25s;
+}
+
+textarea {
+    padding: 10px;
+    border-radius: 5px;
+    resize: none;
+}
+
+textarea.input {
+    overflow-y: scroll;
+}
+
+textarea, hr {
+    border: dashed 1px black;
+}
+
+a:hover {
+    background-color: gainsboro;
+    transition: 0.25s;
+    cursor:pointer;
+}
+
+a:active {
+    background-color: white;
+}
+
+input[type='number'] {
+    width: 3em;
+}
+
+#input-area {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
