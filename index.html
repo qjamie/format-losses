@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Data Parser</title>
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+</head>
+<body>
+    <header>
+        <h1>Convert Logs to Note</h1>
+    </header>
+    
+    <main>
+        <div id="input-area">
+            <textarea class="input" id="dead-units" rows="15" cols="50" placeholder="Enter Dead Units..."></textarea>
+            <textarea class="input" id="hospital-units" rows="15" cols="50" placeholder="Enter Hospital Units..."></textarea>
+        </div>
+        <a id="process">Process</a>
+        <br><br>
+        <div id="options">
+            <h2>Options</h2>
+            <hr style="width: 25%; margin: 0 auto">
+            <input title="Outputs in a format that can be used in ticket notes. Default: ON" type="checkbox" checked>Generate Note</input>
+            <input title="Prevents unit power from showing on note, reducing clutter. Default: ON" type="checkbox" checked>Hide Unit Power</input>
+            <br>
+            <input title="Allows a custom percentage to be input. Default: OFF" type="checkbox" id="adjust-percentage-checkbox">Adjust Percentage</input>
+            <input title="Specifies the percentage (%) of troops to be restored. Default: 30" type="number" max="100" value="30" maxlength="3" size="1" disabled id="percentage-textbox">%</input>
+            <h6>Hover over checkboxes (or textbox) for more information</h6>
+        </div>
+        <div id="output-area">
+            <textarea id="output" rows="18" cols="75" placeholder="Awaiting output..." readonly></textarea>
+        </div>
+    </main>
+    <script src="scripts/main.js"></script>
+</body>
+</html>
