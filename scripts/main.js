@@ -19,13 +19,25 @@ function togglePercentageAdjustment() {
 
 function processData() {
     let dead_unit_text = dead_unit_input.value;
+    let hospital_unit_text = hospital_unit_input.value;
+
     let terminator = "END";
+    let midpoint = " x ";
 
     let dead_unit_data = extractRawText(dead_unit_text, "DEAD UNIT", "died", terminator);
-    let split_dead_unit_data = splitTextIntoData(dead_unit_data, " x ", terminator);
+    let split_dead_unit_data = splitTextIntoData(dead_unit_data, midpoint, terminator);
     let combined_dead_unit_data = combineCommonUnitTypes(split_dead_unit_data);
-    let losses = combined_dead_unit_data[0];
-    let types = combined_dead_unit_data[1];
+
+    let hospital_unit_data = extractRawText(hospital_unit_text, "HOSPITAL UNIT", "added", terminator);
+    let split_hospital_unit_data = splitTextIntoData(hospital_unit_data, midpoint, terminator);
+    let combined_hospital_unit_data = combineCommonUnitTypes(split_hospital_unit_data);
+
+    let dead_unit_losses = combined_dead_unit_data[0];
+    let dead_unit_types = combined_dead_unit_data[1];    
+
+    let hospital_unit_losses = combined_hospital_unit_data[0];
+    let hospital_unit_types = combined_hospital_unit_data[1];
+
     let output_text = "";
 
     /* for applying percentage later
@@ -34,8 +46,14 @@ function processData() {
     }
     */
    
-    for (var i = 0; i < types.length; i++) {
-        output_text += types[i] + " x " + losses[i].toLocaleString("en-US") + "\n";
+    for (var i = 0; i < dead_unit_types.length; i++) {
+        output_text += dead_unit_types[i] + " x " + dead_unit_losses[i].toLocaleString("en-US") + "\n";
+    }
+
+    output_text += "\n";
+
+    for (var i = 0; i < hospital_unit_types.length; i++) {
+        output_text += hospital_unit_types[i] + " x " + hospital_unit_losses[i].toLocaleString("en-US") + "\n";
     }
 
     fillOutput(output_text);
@@ -67,9 +85,8 @@ function extractRawText(targetText, startingText, endingText, terminator) {
 
         substring_text += target_text.substring(substring_start, substring_end) + terminator + " \n";
     }
-
-    substring_text.replaceAll(",", "")
-    return substring_text;
+    
+    return substring_text.replaceAll(",", "");
 }
 
 function splitTextIntoData(targetText, midpoint, terminator) {
@@ -89,18 +106,18 @@ function splitTextIntoData(targetText, midpoint, terminator) {
 
         // A very hacky way of ensuring left_split_start starts at zero initially, and then increments based on the last END reference
         if (split_counter > 1) {
-            left_split_start = split_counter + (terminator + 2);
+            left_split_start = split_counter + (terminator.length + 1);
         }
-        
+
         let next_midpoint_occurrence = target_text.indexOf(midpoint, split_counter);
-        let next_end_occurrence = target_text.indexOf(terminator, split_counter + 1);
+        let next_terminator_occurrence = target_text.indexOf(terminator, split_counter + 1);
 
         left_split_end = next_midpoint_occurrence;
 
         right_split_start = next_midpoint_occurrence + midpoint.length;
-        right_split_end = next_end_occurrence;
+        right_split_end = next_terminator_occurrence;
 
-        split_counter = next_end_occurrence;
+        split_counter = next_terminator_occurrence;
 
         let number_lost = target_text.substring(left_split_start, left_split_end);
         let unit_type = target_text.substring(right_split_start, right_split_end);
@@ -134,6 +151,7 @@ function combineCommonUnitTypes(uncombinedUnitData) {
     for (var i = 0; i < uncombined_losses.length; i++) {
         // running_total must start from i as initial reference but never use it afterwards
         running_total += uncombined_losses[i];
+
         if (checked[i] == true) {
             continue;
         }
