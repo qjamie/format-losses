@@ -45,12 +45,11 @@ function processData() {
         losses[i] = Math.trunc(losses[i] * 0.3);
     }
     */
-   
+
     for (var i = 0; i < dead_unit_types.length; i++) {
         output_text += dead_unit_types[i] + " x " + dead_unit_losses[i].toLocaleString("en-US") + "\n";
+        temp += dead_unit_losses[i];
     }
-
-    output_text += "\n";
 
     for (var i = 0; i < hospital_unit_types.length; i++) {
         output_text += hospital_unit_types[i] + " x " + hospital_unit_losses[i].toLocaleString("en-US") + "\n";
@@ -153,6 +152,7 @@ function combineCommonUnitTypes(uncombinedUnitData) {
         running_total += uncombined_losses[i];
 
         if (checked[i] == true) {
+            running_total = 0;
             continue;
         }
 
