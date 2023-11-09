@@ -7,25 +7,28 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
 </head>
 <body>
+    
     <header>
         <h1>Convert Logs to Note</h1>
+        <input title="Shows options that are usually hidden. Default: OFF" type="checkbox" id="show-options-checkbox">Show Advanced Options</input>
     </header>
     
     <main>
         <div id="input-area">
-            <textarea class="input" id="dead-units" rows="15" cols="50" placeholder="Enter Dead Units..."></textarea>
-            <textarea class="input" id="hospital-units" rows="15" cols="50" placeholder="Enter Hospital Units..."></textarea>
+            <textarea class="input" id="dead-units" rows="10" cols="75" placeholder="Enter Dead Units..."></textarea>
+            <textarea class="input" id="hospital-units" rows="10" cols="75" placeholder="Enter Hospital Units..."></textarea>
         </div>
+        <input title="Allows a custom percentage to be input. Default: OFF" type="checkbox" id="adjust-percentage-checkbox">Adjust Percentage</input>
+        <input title="Specifies the percentage (%) of troops to be restored. Default: 30" type="number" max="100" value="30" maxlength="3" size="1" disabled id="percentage-textbox">%</input>
+        <br><br>    
         <a id="process">Process</a>
         <br><br>
-        <div id="options">
-            <h2>Options</h2>
+        <div id="options" class="options-toggle">
+            <h2>Advanced Options</h2>
             <hr style="width: 25%; margin: 0 auto">
-            <input title="Outputs in a format that can be used in ticket notes. Default: ON" type="checkbox" checked>Generate Note</input>
+            <input title="Outputs a short summary that can be used in ticket notes. Default: ON" type="checkbox" checked>Generate Summary</input>
             <input title="Prevents unit power from showing on note, reducing clutter. Default: ON" type="checkbox" checked>Hide Unit Power</input>
-            <br>
-            <input title="Allows a custom percentage to be input. Default: OFF" type="checkbox" id="adjust-percentage-checkbox">Adjust Percentage</input>
-            <input title="Specifies the percentage (%) of troops to be restored. Default: 30" type="number" max="100" value="30" maxlength="3" size="1" disabled id="percentage-textbox">%</input>
+            <input title="Allows defences to be shown on the note as valid losses. Default: OFF" type="checkbox">Include Defences</input>
             <h6>Hover over checkboxes (or textbox) for more information</h6>
         </div>
         <div id="output-area">

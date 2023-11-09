@@ -2,11 +2,23 @@ let dead_unit_input = document.getElementById("dead-units");
 let hospital_unit_input = document.getElementById("hospital-units");
 let output_box = document.getElementById("output");
 let process_button = document.getElementById("process");
+let show_options_checkbox = document.getElementById("show-options-checkbox");
+let options_box = document.getElementById("options");
 let adjust_percentage_checkbox = document.getElementById("adjust-percentage-checkbox");
 let percentage_textbox = document.getElementById("percentage-textbox");
 
-adjust_percentage_checkbox.addEventListener('change', togglePercentageAdjustment)
+adjust_percentage_checkbox.addEventListener('change', togglePercentageAdjustment);
+show_options_checkbox.addEventListener('change', toggleOptionsVisibility);
 process_button.addEventListener('click', processData);
+
+function toggleOptionsVisibility() {
+    if (!show_options_checkbox.checked) {
+        options_box.classList.add("options-toggle");
+        return
+    }
+
+    options_box.classList.remove("options-toggle");
+}
 
 function togglePercentageAdjustment() {
     if (!adjust_percentage_checkbox.checked) {
@@ -32,13 +44,23 @@ function processData() {
     let split_hospital_unit_data = splitTextIntoData(hospital_unit_data, midpoint, terminator);
     let combined_hospital_unit_data = combineCommonUnitTypes(split_hospital_unit_data);
 
-    let dead_unit_losses = combined_dead_unit_data[0];
-    let dead_unit_types = combined_dead_unit_data[1];    
+    let dead_units_sorted = sortUnitData(combined_dead_unit_data);
+    let hospital_units_sorted = sortUnitData(combined_hospital_unit_data);
 
-    let hospital_unit_losses = combined_hospital_unit_data[0];
-    let hospital_unit_types = combined_hospital_unit_data[1];
+    let find_perma = calculatePermaLosses(dead_units_sorted, hospital_units_sorted);
 
-    let output_text = "";
+    let dead_unit_losses = dead_units_sorted[1];
+    let dead_unit_types = dead_units_sorted[0];
+
+    let hospital_unit_losses = hospital_units_sorted[1];
+    let hospital_unit_types = hospital_units_sorted[0];
+
+    let perma_unit_losses = find_perma[1];
+    let perma_unit_types = find_perma[0];
+
+    let output_text = "Dead Units: \n";
+    let temp = 0;
+    let temp2 = 0;
 
     /* for applying percentage later
     for (var i = 0; i < types.length; i++) {
@@ -51,11 +73,22 @@ function processData() {
         temp += dead_unit_losses[i];
     }
 
+    output_text += "\nHospital Units: \n";
+
     for (var i = 0; i < hospital_unit_types.length; i++) {
         output_text += hospital_unit_types[i] + " x " + hospital_unit_losses[i].toLocaleString("en-US") + "\n";
+        temp2 += hospital_unit_losses[i];
     }
 
-    fillOutput(output_text);
+    output_text += "\nPerma: \n";
+
+    for (var i = 0; i < perma_unit_types.length; i++) {
+        output_text += perma_unit_types[i] + " x " + perma_unit_losses[i].toLocaleString("en-US") + "\n";
+    }
+
+    let diff = temp - temp2;
+
+    fillOutput(output_text + "\n" + "Total Losses: " + temp.toLocaleString("en-US") + "\n" + "Total Hospital: " + temp2.toLocaleString("en-US") + "\n" + "Total Perma: " + diff.toLocaleString("en-US"));
 }
 
 function fillOutput(output) {
@@ -176,6 +209,61 @@ function combineCommonUnitTypes(uncombinedUnitData) {
     overall.push(types);
 
     return overall;
+}
+
+function sortUnitData(combinedUnitData) { 
+    let losses = combinedUnitData[0];
+    let units = combinedUnitData[1];
+    let unit_list = [];
+    let recombined_data = [];
+
+    for (var i = 0; i < losses.length; i++) {
+        unit_list.push({'unit_name': units[i], 'units_lost': losses[i]});
+    }
+
+    unit_list.sort(function(a, b) {
+        return ((a.unit_name < b.unit_name) ? -1 : 0);
+    });
+
+    for (var i = 0; i < unit_list.length; i++) {
+        losses[i] = unit_list[i].unit_name;
+        units[i] = unit_list[i].units_lost;
+    }
+
+    recombined_data.push(losses);
+    recombined_data.push(units)
+
+    return recombined_data;
+}
+
+function calculatePermaLosses(deadData, hospitalData) {
+    let dead_data = deadData;
+    let hospital_data = hospitalData;
+
+    let checked = [];
+
+    for (var i = 0; i < dead_data.length; i++) {
+        checked[i] = false;
+    }
+
+    for (var i = 0; i < dead_data.length; i++) {
+
+        if (checked[i] == true) {
+            continue;
+        }
+
+        // only runs through as current_type if standalone (ie. the only line of losses of that specific unit)
+        current_type = hospital_data[i];
+
+        for (var j = i; j < dead_data.length; j++) {
+            if (dead_data[1][i] == hospital_data[1][j + 1]) {
+                dead_data[0][i] -= hospital_data[0][j + 1];
+                checked[j + 1] = true;
+            }
+        }
+    }
+
+    return dead_data;
 }
 
 function parseJSON(json) {
