@@ -6,10 +6,45 @@ let show_options_checkbox = document.getElementById("show-options-checkbox");
 let options_box = document.getElementById("options");
 let adjust_percentage_checkbox = document.getElementById("adjust-percentage-checkbox");
 let percentage_textbox = document.getElementById("percentage-textbox");
+let copy_output_button = document.getElementById("copy-output");
+let overlay = document.getElementById("overlay");
+let multi_attack_info_button = document.getElementById("multi-attack-info");
+let multi_attack_info_overlay = document.getElementById("multi-attack-info-overlay");
 
 adjust_percentage_checkbox.addEventListener('change', togglePercentageAdjustment);
 show_options_checkbox.addEventListener('change', toggleOptionsVisibility);
+copy_output_button.addEventListener('click', copyToClipboard);
 process_button.addEventListener('click', processData);
+multi_attack_info_button.addEventListener('click', showMultiAttackInfo);
+document.body.addEventListener('click', hideMultiAttackInfo);
+
+let multi_attack_info_showing = false;
+
+function showMultiAttackInfo() {
+    multi_attack_info_overlay.style.display = "block";
+
+    setTimeout(() => {
+        multi_attack_info_overlay.style.opacity = '1';
+    }, "50");
+
+    setTimeout(() => {
+    multi_attack_info_showing = true;
+    }, "50");
+}
+
+function hideMultiAttackInfo() {
+    if (multi_attack_info_showing) {
+        multi_attack_info_overlay.style.opacity = '0';
+        
+        setTimeout(() => {
+            multi_attack_info_overlay.style.display = "none";
+        }, "300");
+
+        setTimeout(() => {
+            multi_attack_info_showing = false;
+        }, "50");
+    }
+}
 
 function toggleOptionsVisibility() {
     if (!show_options_checkbox.checked) {
@@ -27,6 +62,16 @@ function togglePercentageAdjustment() {
     }
 
     percentage_textbox.disabled = false;
+}
+
+function copyToClipboard() {
+    navigator.clipboard.writeText(output_box.value);
+
+    overlay.style.opacity = '1';
+
+    setTimeout(() => {
+        overlay.style.opacity = '0';
+    }, "1000");
 }
 
 function processData() {
@@ -47,52 +92,58 @@ function processData() {
     let dead_units_sorted = sortUnitData(combined_dead_unit_data);
     let hospital_units_sorted = sortUnitData(combined_hospital_unit_data);
 
+    let dead_unit_types = [].concat(dead_units_sorted[0]);
+    let dead_unit_losses = [].concat(dead_units_sorted[1]);
+
+    let hospital_unit_types = [].concat(hospital_units_sorted[0]);
+    let hospital_unit_losses = [].concat(hospital_units_sorted[1]);
+
     let find_perma = calculatePermaLosses(dead_units_sorted, hospital_units_sorted);
-
-    let dead_unit_losses = dead_units_sorted[1];
-    let dead_unit_types = dead_units_sorted[0];
-
-    let hospital_unit_losses = hospital_units_sorted[1];
-    let hospital_unit_types = hospital_units_sorted[0];
 
     let perma_unit_losses = find_perma[1];
     let perma_unit_types = find_perma[0];
 
-    let output_text = "Dead Units: \n";
-    let temp = 0;
-    let temp2 = 0;
-
-    /* for applying percentage later
-    for (var i = 0; i < types.length; i++) {
-        losses[i] = Math.trunc(losses[i] * 0.3);
-    }
-    */
+    let output_text = "[Dead Units]\n\n";
+    let dead_running_total = 0;
+    let hospital_running_total = 0;
+    let perma_running_total = 0;
 
     for (var i = 0; i < dead_unit_types.length; i++) {
         output_text += dead_unit_types[i] + " x " + dead_unit_losses[i].toLocaleString("en-US") + "\n";
-        temp += dead_unit_losses[i];
+        dead_running_total += dead_unit_losses[i];
     }
 
-    output_text += "\nHospital Units: \n";
+    output_text += "\n" + "Total Losses: " + dead_running_total.toLocaleString("en-US");
+
+    output_text += "\n\n[Hospital Units]\n\n";
 
     for (var i = 0; i < hospital_unit_types.length; i++) {
         output_text += hospital_unit_types[i] + " x " + hospital_unit_losses[i].toLocaleString("en-US") + "\n";
-        temp2 += hospital_unit_losses[i];
+        hospital_running_total += hospital_unit_losses[i];
     }
 
-    output_text += "\nPerma: \n";
+    output_text += "\n" + "Total Hospital: " + hospital_running_total.toLocaleString("en-US");
+
+    output_text += "\n\n[Permanant Losses]\n\n";
 
     for (var i = 0; i < perma_unit_types.length; i++) {
         output_text += perma_unit_types[i] + " x " + perma_unit_losses[i].toLocaleString("en-US") + "\n";
+        perma_running_total += perma_unit_losses[i];
     }
 
-    let diff = temp - temp2;
+    output_text += "\n" + "Total Perma: " + perma_running_total.toLocaleString("en-US") + "\n";    
 
-    fillOutput(output_text + "\n" + "Total Losses: " + temp.toLocaleString("en-US") + "\n" + "Total Hospital: " + temp2.toLocaleString("en-US") + "\n" + "Total Perma: " + diff.toLocaleString("en-US"));
+    output_text += "\n[To be returned]\n\n";
+
+    for (var i = 0; i < perma_unit_types.length; i++) {
+        output_text += perma_unit_types[i] + " x " + Math.trunc(perma_unit_losses[i] * 0.3).toLocaleString("en-US") + "\n";
+    }
+
+    fillOutput(output_text);
 }
 
 function fillOutput(output) {
-    output_box.value = output;
+    output_box.value = output.substring(0, output.length - 1);
 }
 
 function extractRawText(targetText, startingText, endingText, terminator) {
@@ -240,26 +291,22 @@ function calculatePermaLosses(deadData, hospitalData) {
     let dead_data = deadData;
     let hospital_data = hospitalData;
 
-    let checked = [];
-
-    for (var i = 0; i < dead_data.length; i++) {
-        checked[i] = false;
+    for (var i = 0; i < dead_data[0].length; i++) {
+        for (var j = 0; j < hospital_data[0].length; j++) {
+            if (dead_data[0][i] == hospital_data[0][j]) {
+                dead_data[1][i] -= hospital_data[1][j];
+            }
+        }
     }
 
-    for (var i = 0; i < dead_data.length; i++) {
+    let full_length = dead_data[0].length
 
-        if (checked[i] == true) {
-            continue;
-        }
+    for (var i = 0; i < full_length; i++) {
+        if (dead_data[1][i] == 0) {
+            dead_data[0].splice(i, 1);
+            dead_data[1].splice(i, 1);
 
-        // only runs through as current_type if standalone (ie. the only line of losses of that specific unit)
-        current_type = hospital_data[i];
-
-        for (var j = i; j < dead_data.length; j++) {
-            if (dead_data[1][i] == hospital_data[1][j + 1]) {
-                dead_data[0][i] -= hospital_data[0][j + 1];
-                checked[j + 1] = true;
-            }
+            i -= 1;
         }
     }
 

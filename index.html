@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unit Data Parser</title>
+    <title>Convert Log to Note</title>
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
 </head>
 <body>
@@ -11,6 +11,28 @@
     <header>
         <h1>Convert Logs to Note</h1>
         <input title="Shows options that are usually hidden. Default: OFF" type="checkbox" id="show-options-checkbox">Show Advanced Options</input>
+        
+        <div id="overlay">
+            <h3>Copied to Clipboard</h3>
+        </div>
+        <div id="multi-attack-info-overlay">
+            <h3>Multi-attack Mode - How to use</h3>
+            <p>With this selected, losses can be separated based on the attacking/defending player. 
+                <br><br>This requires minor formatting changes - here, you'll have to separate each batch of losses with the date - see below as an example:</p>
+            <p class="multi-attack-example">
+                Date: November 18th, 2023
+                <br>20:05:17 DEAD UNIT 52 x Marauder died Attacking City: Owned by javitxu attacked City #7255448 with intent Attack (Fortress) at 285, 450
+                <br>20:04:48 DEAD UNIT 68 x Forsaken died Attacking City: Owned by javitxu attacked City #7255448 with intent Attack (Fortress) at 285, 450
+                <br><br>Date: November 18th, 2023
+                <br>19:55:15 DEAD UNIT 1 x Marauder died Attacking City: Owned by 6283808 attacked City #7255374 with intent Attack (Fortress) at 305, 518
+                <br>19:55:03 DEAD UNIT 2 x Chaos Warhounds died Attacking City: Owned by 6283808 attacked City #7255374 with intent Attack (Fortress) at 305, 518
+                <br><br>Date: November 18th, 2023
+                <br>15:12:32 DEAD UNIT 52 x Chaos Spawn of Khorne died Attacking City: Owned by Lordette34 attacked City #7261790 with intent Attack (Fortress) at 410, 169
+                <br>15:11:11 DEAD UNIT 798 x Marauder died Attacking City: Owned by Lordette34 attacked City #7261790 with intent Attack (Fortress) at 410, 169
+                <br>15:10:28 DEAD UNIT 5,233 x Chaos Spawn of Khorne died Attacking City: Owned by Lordette34 attacked City #7261790 with intent Attack (Fortress) at 410, 169
+            </p>
+            <p>Hospital units<b>must</b>also be formatted the same way, as the dates are used as 'separators'. You can use the times to line each attack up manually. The application will break and give wrong results if this is not applied.</p>
+        </div>
     </header>
     
     <main>
@@ -18,9 +40,15 @@
             <textarea class="input" id="dead-units" rows="10" cols="75" placeholder="Enter Dead Units..."></textarea>
             <textarea class="input" id="hospital-units" rows="10" cols="75" placeholder="Enter Hospital Units..."></textarea>
         </div>
+        <label>Hospital Capacity</label><input title="The cap of the hospital/sawbones on the target account" type="number" id="hospital-cap-textbox" value="300000" maxlength="7" style="width: 75px;"></input>
+        <br>
         <input title="Allows a custom percentage to be input. Default: OFF" type="checkbox" id="adjust-percentage-checkbox">Adjust Percentage</input>
         <input title="Specifies the percentage (%) of troops to be restored. Default: 30" type="number" max="100" value="30" maxlength="3" size="1" disabled id="percentage-textbox">%</input>
-        <br><br>    
+        <br>
+        <input title="Groups losses by opposing attacker/defender. Requires formatting changes - click 'i' for help. Default: OFF" type="checkbox">Multi-attack Mode</input>
+        <a id="multi-attack-info">i</a>
+        <br>
+        <br>    
         <a id="process">Process</a>
         <br><br>
         <div id="options" class="options-toggle">
@@ -34,6 +62,8 @@
         <div id="output-area">
             <textarea id="output" rows="18" cols="75" placeholder="Awaiting output..." readonly></textarea>
         </div>
+        <br>
+        <a id="copy-output">Copy to Clipboard</a>
     </main>
     <script src="scripts/main.js"></script>
 </body>

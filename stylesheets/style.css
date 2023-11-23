@@ -15,6 +15,7 @@ header, main {
 }
 
 a {
+    border: dashed 1px black;
     background-color: white;
     padding: 10px;
     border-radius: 5px;
@@ -47,6 +48,9 @@ a:active {
 
 input[type='number'] {
     width: 3em;
+    padding: 5px;
+    border-radius: 2.5px;
+    border: dashed 1px black;
 }
 
 #input-area {
@@ -56,6 +60,58 @@ input[type='number'] {
     justify-content: center;
 }
 
+#overlay {
+    position: fixed;
+    display: block;
+    border-radius: 5px;
+    width: 25%;
+    height: 40px;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    text-align: center;
+    color: white;
+    opacity: 0;
+    transition: 0.5s;
+}
+
+#multi-attack-info-overlay {
+    position: fixed;
+    display: none;
+    border-radius: 5px;
+    border: dashed 1px black;
+    box-shadow: 0px 0px 20px rgba(0,0,0, 0.5);;
+    width: 25%;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255,255,255);
+    z-index: 2;
+    text-align: center;
+    color: black;
+    opacity: 0;
+    transition: 0.5s;
+}
+
+#multi-attack-info {
+    font-size: 10px;
+    padding: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 90px;
+}
+
 .options-toggle {
     display: none;
+}
+
+.multi-attack-example {
+    text-align: left;
+    background-color: gainsboro;
+    font-family: monospace;
+    font-size: 10px;
+    padding: 2px;
+    border-radius: 3px;
 }
