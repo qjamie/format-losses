@@ -62,7 +62,7 @@ input[type='number'] {
 
 #overlay {
     position: fixed;
-    display: block;
+    display: none;
     border-radius: 5px;
     width: 25%;
     height: 40px;
@@ -85,7 +85,7 @@ input[type='number'] {
     box-shadow: 0px 0px 20px rgba(0,0,0, 0.5);;
     width: 25%;
     top: 45%;
-    left: 50%;
+    left: 49.5%;
     transform: translate(-50%, -50%);
     background-color: rgba(255,255,255);
     z-index: 2;
