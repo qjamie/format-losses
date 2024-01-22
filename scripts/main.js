@@ -67,11 +67,19 @@ function togglePercentageAdjustment() {
 function copyToClipboard() {
     navigator.clipboard.writeText(output_box.value);
 
-    overlay.style.opacity = '1';
+    overlay.style.display = "block";
+
+    setTimeout(() => {
+        overlay.style.opacity = '1';
+    }, "50");
 
     setTimeout(() => {
         overlay.style.opacity = '0';
     }, "1000");
+
+    setTimeout(() => {
+        overlay.style.display = "none";
+    }, "1300");
 }
 
 function processData() {
