@@ -320,25 +320,3 @@ function calculatePermaLosses(deadData, hospitalData) {
 
     return dead_data;
 }
-
-function parseJSON(json) {
-    var obj;
-    if (!isJSON(json)) {
-        console.log(isJSON(json))
-        alert("Invalid JSON")
-        return
-    }
-
-    obj = JSON.parse(json);
-
-    return obj;
-}
-
-function isJSON(data) {
-    try {
-        JSON.parse(data);
-    } catch (e) {
-        return false;
-    }
-    return true;
-}
