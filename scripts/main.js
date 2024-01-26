@@ -2,46 +2,54 @@ let dead_unit_input = document.getElementById("dead-units");
 let hospital_unit_input = document.getElementById("hospital-units");
 let output_box = document.getElementById("output");
 let process_button = document.getElementById("process");
-let show_options_checkbox = document.getElementById("show-options-checkbox");
 let options_box = document.getElementById("options");
-let adjust_percentage_checkbox = document.getElementById("adjust-percentage-checkbox");
 let percentage_textbox = document.getElementById("percentage-textbox");
-let copy_output_button = document.getElementById("copy-output");
-let overlay = document.getElementById("overlay");
-let multi_attack_info_button = document.getElementById("multi-attack-info");
-let multi_attack_info_overlay = document.getElementById("multi-attack-info-overlay");
+let copy_output = document.getElementById("copy-output");
+let copy_output_window = document.getElementById("overlay");
+let advanced_options = document.getElementById("advanced-options");
+let advanced_options_window = document.getElementById("advanced-options-window");
+let theme_switcher = document.getElementById("theme-switcher")
 
-adjust_percentage_checkbox.addEventListener('change', togglePercentageAdjustment);
-show_options_checkbox.addEventListener('change', toggleOptionsVisibility);
-copy_output_button.addEventListener('click', copyToClipboard);
+let window_showing = false;
+let current_window;
+
+copy_output.addEventListener('click', copyToClipboard);
 process_button.addEventListener('click', processData);
-multi_attack_info_button.addEventListener('click', showMultiAttackInfo);
-document.body.addEventListener('click', hideMultiAttackInfo);
+advanced_options.addEventListener('click', function() {showWindowPopup(advanced_options_window)});
+document.body.addEventListener('click', hideWindowPopup);
+theme_switcher.addEventListener('click', toggleTheme);
 
-let multi_attack_info_showing = false;
+function toggleTheme() {
 
-function showMultiAttackInfo() {
-    multi_attack_info_overlay.style.display = "block";
+}
+
+function showWindowPopup(window) {
+    window.style.display = "block";
+    document.body.style.cursor = "pointer";
+    current_window = window;
 
     setTimeout(() => {
-        multi_attack_info_overlay.style.opacity = '1';
+        window.style.opacity = '1';
     }, "50");
 
     setTimeout(() => {
-    multi_attack_info_showing = true;
+    window_showing = true;
     }, "50");
 }
 
-function hideMultiAttackInfo() {
-    if (multi_attack_info_showing) {
-        multi_attack_info_overlay.style.opacity = '0';
+function hideWindowPopup() {
+    let window = current_window;
+    document.body.style.cursor = "auto";
+
+    if (window_showing) {
+        window.style.opacity = '0';
         
         setTimeout(() => {
-            multi_attack_info_overlay.style.display = "none";
+            window.style.display = "none";
         }, "300");
 
         setTimeout(() => {
-            multi_attack_info_showing = false;
+            window_showing = false;
         }, "50");
     }
 }
@@ -67,18 +75,18 @@ function togglePercentageAdjustment() {
 function copyToClipboard() {
     navigator.clipboard.writeText(output_box.value);
 
-    overlay.style.display = "block";
+    copy_output_window.style.display = "block";
 
     setTimeout(() => {
-        overlay.style.opacity = '1';
+        copy_output_window.style.opacity = '1';
     }, "50");
 
     setTimeout(() => {
-        overlay.style.opacity = '0';
+        copy_output_window.style.opacity = '0';
     }, "1000");
 
     setTimeout(() => {
-        overlay.style.display = "none";
+        copy_output_window.style.display = "none";
     }, "1300");
 }
 

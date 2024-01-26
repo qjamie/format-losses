@@ -4,10 +4,12 @@
 }
 
 body {
-    background: whitesmoke;
+    /*background: whitesmoke;*/
+    background-color: #191919;
     background-size: cover;
     padding: 20px;
     margin: 0 auto;
+    color: white;
 }
 
 header, main {
@@ -15,14 +17,23 @@ header, main {
 }
 
 a {
-    border: dashed 1px black;
-    background-color: white;
-    padding: 10px;
-    border-radius: 5px;
+    /*border: dashed 1px black;
+    background-color: white;*/
+    border: dashed 1px white;
+    background-color: #131313;
+    color: white;
+    padding: 8px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 95px;
     transition: 0.25s;
+    font-size: 14px;
+    margin: 0 auto;
 }
 
 textarea {
+    color:white;
+    background-color: #111111;
     padding: 10px;
     border-radius: 5px;
     resize: none;
@@ -46,6 +57,11 @@ a:active {
     background-color: white;
 }
 
+input {
+    background-color: #131313;
+    color: white;
+}
+
 input[type='number'] {
     width: 3em;
     padding: 5px;
@@ -60,47 +76,27 @@ input[type='number'] {
     justify-content: center;
 }
 
-#overlay {
-    position: fixed;
+#overlay, #advanced-options-window, #hospital-capacity-window, #return-percentage-window {
+    opacity: 0;
     display: none;
+}
+
+.popup {
+    position: fixed;
     border-radius: 5px;
-    width: 25%;
-    height: 40px;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0,0,0,0.5);
+    border: dashed 1px white;
+    width: auto;
+    top: 45%;
+    left: 49.5%;
     z-index: 2;
-    text-align: center;
+    text-align: left;
     color: white;
     opacity: 0;
     transition: 0.5s;
-}
-
-#multi-attack-info-overlay {
-    position: fixed;
-    display: none;
-    border-radius: 5px;
-    border: dashed 1px black;
-    box-shadow: 0px 0px 20px rgba(0,0,0, 0.5);;
-    width: 25%;
-    top: 45%;
-    left: 49.5%;
     transform: translate(-50%, -50%);
-    background-color: rgba(255,255,255);
-    z-index: 2;
-    text-align: center;
-    color: black;
-    opacity: 0;
+    box-shadow: 0px 0px 20px rgba(0,0,0, 0.5);
+    background-color: #111111;
     transition: 0.5s;
-}
-
-#multi-attack-info {
-    font-size: 10px;
-    padding: 4px;
-    padding-left: 8px;
-    padding-right: 8px;
-    border-radius: 90px;
 }
 
 .options-toggle {
@@ -114,4 +110,13 @@ input[type='number'] {
     font-size: 10px;
     padding: 2px;
     border-radius: 3px;
+}
+
+.small-ribbon-button {
+    font-size: 11px;
+    padding: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 90px;
+    margin: 0 auto;
 }
