@@ -8,24 +8,95 @@ let copy_output = document.getElementById("copy-output");
 let copy_output_window = document.getElementById("overlay");
 let advanced_options = document.getElementById("advanced-options");
 let advanced_options_window = document.getElementById("advanced-options-window");
+let hospital_capacity = document.getElementById("hospital-capacity");
+let hospital_capacity_window = document.getElementById("hospital-capacity-window");
+let set_hospital_capacity_adjustment = document.getElementById("set-hospital-capacity-adjustment");
+let new_hospital_capacity = document.getElementById("new-hospital-capacity");
+let return_percentage = document.getElementById("return-percentage");
+let return_percentage_window = document.getElementById("return-percentage-window");
+let set_return_percentage_adjustment = document.getElementById("set-return-percentage-adjustment");
+let new_return_percentage = document.getElementById("new-return-percentage");
 let theme_switcher = document.getElementById("theme-switcher")
+let clear_textboxes = document.getElementById("clear-textboxes");
+
+let encoded_json = document.getElementById("encjson");
+
+const close_buttons = document.querySelectorAll(".close-popup");
+const buttons_behind_popup = document.querySelectorAll(".disable-on-popup");
+
+var root = document.querySelector(':root');
 
 let window_showing = false;
+let is_dark_theme = true;
 let current_window;
 
 copy_output.addEventListener('click', copyToClipboard);
 process_button.addEventListener('click', processData);
 advanced_options.addEventListener('click', function() {showWindowPopup(advanced_options_window)});
-document.body.addEventListener('click', hideWindowPopup);
+hospital_capacity.addEventListener('click', function() {showWindowPopup(hospital_capacity_window)});
+return_percentage.addEventListener('click', function() {showWindowPopup(return_percentage_window)});
 theme_switcher.addEventListener('click', toggleTheme);
+set_hospital_capacity_adjustment.addEventListener('click', updateHospitalCapacity);
+set_return_percentage_adjustment.addEventListener('click', updateReturnPercentage);
+clear_textboxes.addEventListener('click', clearAllText);
+
+function clearAllText() {
+    dead_unit_input.value = "";
+    hospital_unit_input.value = "";
+    output_box.value = "";
+
+    console.log(atob(encoded_json.innerHTML));
+}
+
+function updateReturnPercentage() {
+    return_percentage.textContent = "Return Percentage: " + Number(new_return_percentage.value) + "%";
+}
+
+function updateHospitalCapacity() {
+    hospital_capacity.textContent = "Hospital Capacity: " + Number(new_hospital_capacity.value).toLocaleString("en-US");
+}
+
+for (let i = 0; i < close_buttons.length; i++) { 
+    close_buttons[i].addEventListener('click', hideWindowPopup);
+}
 
 function toggleTheme() {
+    if (is_dark_theme) {
+        theme_switcher.textContent = "Current Theme: ☀️";
+        is_dark_theme = false;
+        changeThemeLight();
+    } else {
+        theme_switcher.textContent = "Current Theme: 🌙";
+        is_dark_theme = true;
+        changeThemeDark();
+    }
+}
 
+function changeThemeLight() {
+    root.style.setProperty('--button-bg', 'eeeeee');
+    root.style.setProperty('--button-highlight', 'black');
+    root.style.setProperty('--textarea-bg', '#e8e8e8');
+    root.style.setProperty('--scrollbar-thumb', '#c9c9c9');
+    root.style.setProperty('--scrollbar-thumb-hover', '#adadad');
+    root.style.setProperty('--body-bg', 'whitesmoke');
+    root.style.setProperty('--button-hover', '#e8e8e8');
+    root.style.setProperty('--button-active', '#c9c9c9');
+}
+
+function changeThemeDark() {
+    root.style.setProperty('--button-bg', '#131313');
+    root.style.setProperty('--button-highlight', 'white');
+    root.style.setProperty('--textarea-bg', '#111111');
+    root.style.setProperty('--scrollbar-thumb', '#323232');
+    root.style.setProperty('--scrollbar-thumb-hover', '#404040');
+    root.style.setProperty('--body-bg', '#191919');
+    root.style.setProperty('--button-hover', '#252525');
+    root.style.setProperty('--button-active', '#505050');
 }
 
 function showWindowPopup(window) {
     window.style.display = "block";
-    document.body.style.cursor = "pointer";
+    root.style.setProperty('cursor', 'default');
     current_window = window;
 
     setTimeout(() => {
@@ -35,11 +106,21 @@ function showWindowPopup(window) {
     setTimeout(() => {
     window_showing = true;
     }, "50");
+
+    for (let i = 0; i < buttons_behind_popup.length; i++) { 
+        buttons_behind_popup[i].disabled = true;
+        buttons_behind_popup[i].classList.add("disable-anchor-tags");
+    }
 }
 
 function hideWindowPopup() {
     let window = current_window;
-    document.body.style.cursor = "auto";
+    document.body.removeAttribute('style');
+
+    for (let i = 0; i < buttons_behind_popup.length; i++) { 
+        buttons_behind_popup[i].disabled = false;
+        buttons_behind_popup[i].classList.remove("disable-anchor-tags");
+    }
 
     if (window_showing) {
         window.style.opacity = '0';
