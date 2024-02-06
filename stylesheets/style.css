@@ -89,7 +89,7 @@ input[type="number"], select {
     color: var(--button-highlight);
 }
 
-#input-area {
+#input-area, #output-area {
     text-align: center;
     display: flex;
     align-items: center;
