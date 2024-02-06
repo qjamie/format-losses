@@ -78,7 +78,7 @@ input {
     color: var(--button-highlight);
 }
 
-input[type="number"] {
+input[type="number"], select {
     border-radius: 10px;
     border: solid 1px var(--button-highlight);
     padding: 4px;

@@ -18,15 +18,30 @@
         </div>
         
         <div id="advanced-options-window" class="popup">
-            <h3>Advanced Options</h3>
-            <h6>Can't be saved between sessions</h6>
-            <input title="Outputs a short summary that can be used in ticket notes. Default: ON" type="checkbox" checked>Generate Summary</input>
+            <div class="div-center">
+                <h3>Advanced Options</h3>
+                <h6>Can't be saved between sessions</h6>
+            </div>
+            <input title="Totals up the number of units killed by each attacker. Default: ON" type="checkbox" checked>Total up attacker kills</input>
             <br>
             <input title="Shows unit power and tier. May slow down processing. Default: Off" type="checkbox">Show unit properties</input>
             <br>
-            <input title="Allows defences to be shown on the note as valid losses. Default: OFF" type="checkbox">Include Defences</input>
+            <input title="Allows defences to be shown on the note as valid losses. Default: OFF" type="checkbox">Include defences</input>
             <br>
+            <input title="Removes hospital unit box. To be used for cases in which all units were permanantly lost. Default: OFF" type="checkbox">100% perma mode</input>
+            <br>
+            <input title="Bypasses all error messages. Not recommended, but may be required in unexpected circumstances. Default: OFF" type="checkbox">Bruteforce errors</input>
+            <br>
+            </input>
             <div class="div-center">
+                <label for="order-dropdown">Output Order</label>
+                <br>
+                <select id="order-dropdown" title="Determines the order that units will be outputted in. Default: Alphabetic" checked>
+                    <option value="alphabetic">Alphabetic</option>
+                    <option value="unit-tier">Unit Tier</option>
+                    <option value="prioritise-offence">Prioritise Offence</option>
+                </select>
+                <br><br>
                 <a class="close-popup">Confirm Options</a>
             </div>
             <br>
@@ -57,13 +72,13 @@
     
     <main>
         <div id="input-area">
-            <textarea class="input disable-on-popup" id="dead-units" rows="15" cols="75" placeholder="Enter Dead Units..."></textarea>
-            <textarea class="input disable-on-popup" id="hospital-units" rows="15" cols="75" placeholder="Enter Hospital Units..."></textarea>
+            <textarea class="input disable-on-popup" id="dead-units" rows="20" cols="75" placeholder="Enter Dead Units..."></textarea>
+            <textarea class="input disable-on-popup" id="hospital-units" rows="20" cols="75" placeholder="Enter Hospital Units..."></textarea>
         </div>
         <a id="hospital-capacity" class="small-ribbon-button disable-on-popup">Hospital Capacity: 300,000</a>
         <a id="return-percentage" class="small-ribbon-button disable-on-popup">Return Percentage: 30%</a>
         <div id="output-area">
-            <textarea class="disable-on-popup" id="output" rows="18" cols="75" placeholder="Awaiting output..." readonly></textarea>
+            <textarea class="disable-on-popup" id="output" rows="20" cols="158" placeholder="Awaiting output..." readonly></textarea>
         </div>
         <a class="disable-on-popup" id="process">Convert 🛠️</a>
         <a class="disable-on-popup" id="copy-output">Copy Output 📄</a>
