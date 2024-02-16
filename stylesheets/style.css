@@ -45,14 +45,13 @@ a {
     margin: 0 auto;
 }
 
-
-
 textarea {
     color: var(--button-highlight);
     background-color: var(--textarea-bg);
     padding: 10px;
     border-radius: 5px;
     resize: none;
+    transition: 0.25s;
 }
 
 textarea.input {

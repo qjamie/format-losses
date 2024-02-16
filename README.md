@@ -1,3 +1,5 @@
 # How to use
 
-- will add this later
+- Put relevant data into each textbox
+- Convert with the click of a button
+- Adjust settings at will

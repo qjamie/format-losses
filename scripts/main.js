@@ -30,6 +30,8 @@ let window_showing = false;
 let is_dark_theme = true;
 let current_window;
 
+let percentage_modifier = 0.3;
+
 copy_output.addEventListener('click', copyToClipboard);
 process_button.addEventListener('click', processData);
 advanced_options.addEventListener('click', function() {showWindowPopup(advanced_options_window)});
@@ -46,10 +48,14 @@ function clearAllText() {
     output_box.value = "";
 
     console.log(atob(encoded_json.innerHTML));
+
+    
 }
 
 function updateReturnPercentage() {
     return_percentage.textContent = "Return Percentage: " + Number(new_return_percentage.value) + "%";
+
+    percentage_modifier = new_return_percentage.value / 100;
 }
 
 function updateHospitalCapacity() {
@@ -200,41 +206,21 @@ function processData() {
     let perma_unit_losses = find_perma[1];
     let perma_unit_types = find_perma[0];
 
-    let output_text = "[Dead Units]\n\n";
-    let dead_running_total = 0;
-    let hospital_running_total = 0;
-    let perma_running_total = 0;
+    let dead_unit_total = dead_unit_losses.reduce((partialSum, a) => partialSum + a, 0);
+    let hospital_unit_total = hospital_unit_losses.reduce((partialSum, a) => partialSum + a, 0);
+    let perma_unit_total = perma_unit_losses.reduce((partialSum, a) => partialSum + a, 0);
 
-    for (var i = 0; i < dead_unit_types.length; i++) {
-        output_text += dead_unit_types[i] + " x " + dead_unit_losses[i].toLocaleString("en-US") + "\n";
-        dead_running_total += dead_unit_losses[i];
-    }
+    let output_text = "Dead Units -- " + dead_unit_total.toLocaleString("en-US") +  ":\n\n";
+    output_text += createUnitList(dead_unit_types, dead_unit_losses, 1);
 
-    output_text += "\n" + "Total Losses: " + dead_running_total.toLocaleString("en-US");
+    output_text += "\nHospital Units -- " + hospital_unit_total.toLocaleString("en-US") + ":\n\n";
+    output_text += createUnitList(hospital_unit_types, hospital_unit_losses, 1);
 
-    output_text += "\n\n[Hospital Units]\n\n";
+    output_text += "\nPermanant Losses -- " + perma_unit_total.toLocaleString("en-US") + ":\n\n";
+    output_text += createUnitList(perma_unit_types, perma_unit_losses, 1);
 
-    for (var i = 0; i < hospital_unit_types.length; i++) {
-        output_text += hospital_unit_types[i] + " x " + hospital_unit_losses[i].toLocaleString("en-US") + "\n";
-        hospital_running_total += hospital_unit_losses[i];
-    }
-
-    output_text += "\n" + "Total Hospital: " + hospital_running_total.toLocaleString("en-US");
-
-    output_text += "\n\n[Permanant Losses]\n\n";
-
-    for (var i = 0; i < perma_unit_types.length; i++) {
-        output_text += perma_unit_types[i] + " x " + perma_unit_losses[i].toLocaleString("en-US") + "\n";
-        perma_running_total += perma_unit_losses[i];
-    }
-
-    output_text += "\n" + "Total Perma: " + perma_running_total.toLocaleString("en-US") + "\n";    
-
-    output_text += "\n[To be returned]\n\n";
-
-    for (var i = 0; i < perma_unit_types.length; i++) {
-        output_text += perma_unit_types[i] + " x " + Math.trunc(perma_unit_losses[i] * 0.3).toLocaleString("en-US") + "\n";
-    }
+    output_text += "\nTo be returned (" + percentage_modifier * 100 +"%):\n\n";
+    output_text += createUnitList(perma_unit_types, perma_unit_losses, percentage_modifier);
 
     fillOutput(output_text);
 }
@@ -408,4 +394,14 @@ function calculatePermaLosses(deadData, hospitalData) {
     }
 
     return dead_data;
+}
+
+function createUnitList(types, losses, modifier) {
+    let text = "";
+
+    for (var i = 0; i < types.length; i++) {
+        text += types[i] + " x " + Math.trunc(losses[i] * modifier).toLocaleString("en-US") + "\n";
+    }
+
+    return text;
 }
