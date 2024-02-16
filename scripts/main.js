@@ -10,6 +10,8 @@ let advanced_options = document.getElementById("advanced-options");
 let advanced_options_window = document.getElementById("advanced-options-window");
 let hospital_capacity = document.getElementById("hospital-capacity");
 let hospital_capacity_window = document.getElementById("hospital-capacity-window");
+let list_order = document.getElementById("list-order");
+let list_order_window = document.getElementById("list-order-window");
 let set_hospital_capacity_adjustment = document.getElementById("set-hospital-capacity-adjustment");
 let new_hospital_capacity = document.getElementById("new-hospital-capacity");
 let return_percentage = document.getElementById("return-percentage");
@@ -37,6 +39,7 @@ process_button.addEventListener('click', processData);
 advanced_options.addEventListener('click', function() {showWindowPopup(advanced_options_window)});
 hospital_capacity.addEventListener('click', function() {showWindowPopup(hospital_capacity_window)});
 return_percentage.addEventListener('click', function() {showWindowPopup(return_percentage_window)});
+list_order.addEventListener('click', function() {showWindowPopup(list_order_window)});
 theme_switcher.addEventListener('click', toggleTheme);
 set_hospital_capacity_adjustment.addEventListener('click', updateHospitalCapacity);
 set_return_percentage_adjustment.addEventListener('click', updateReturnPercentage);
@@ -49,7 +52,7 @@ function clearAllText() {
 
     console.log(atob(encoded_json.innerHTML));
 
-    
+
 }
 
 function updateReturnPercentage() {

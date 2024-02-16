@@ -35,19 +35,14 @@
             <input title="Bypasses all error messages. Not recommended, but may be required in unexpected circumstances. Default: OFF" type="checkbox">Bruteforce errors</input>
             <br>
             </input>
+            <br>
             <div class="div-center">
-                <label for="order-dropdown">Output Order</label>
-                <br>
-                <select id="order-dropdown" title="Determines the order that units will be outputted in. Default: Alphabetic" checked>
-                    <option value="alphabetic">Alphabetic</option>
-                    <option value="unit-tier">Unit Tier</option>
-                    <option value="prioritise-offence">Prioritise Offence</option>
-                </select>
-                <br><br>
                 <a class="close-popup">Confirm Options</a>
             </div>
-            <p>v0.91</p>
             <br>
+            <div class="div-center">
+                <h6>Current Release: v0.91</h6>
+            </div>
         </div>
 
         <div id="hospital-capacity-window" class="popup">
@@ -71,6 +66,21 @@
             </div>
             <br>
         </div>
+        
+        <div id="list-order-window" class="popup">
+            <h3>Set List Order</h3>
+            <h6>Select from dropdown</h6>
+            <select id="order-dropdown" title="Determines the order that units will be outputted in. Default: Alphabetic" checked>
+                <option value="alphabetic">Alphabetic</option>
+                <option value="unit-tier">Unit Tier</option>
+                <option value="prioritise-offence">Prioritise Offence</option>
+            </select>
+            <br>
+            <div>
+                <a id="set-new-list-order" class="close-popup">Confirm Options</a>
+            </div>
+            <br>
+        </div>
     </header>
     
     <main>
@@ -80,6 +90,7 @@
         </div>
         <a id="hospital-capacity" class="small-ribbon-button disable-on-popup">Hospital Capacity: 300,000</a>
         <a id="return-percentage" class="small-ribbon-button disable-on-popup">Return Percentage: 30%</a>
+        <a id="list-order" class="small-ribbon-button disable-on-popup">List Output Order: Alphabetic</a>
         <div id="output-area">
             <textarea class="disable-on-popup" id="output" rows="20" cols="158" placeholder="Awaiting output..." readonly></textarea>
         </div>
