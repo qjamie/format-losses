@@ -22,6 +22,29 @@ let theme_switcher = document.getElementById("theme-switcher")
 let clear_textboxes = document.getElementById("clear-textboxes");
 
 let encoded_json = document.getElementById("encjson");
+let decoded_json = atob(encoded_json.innerHTML);
+
+let parsed_json = JSON.parse(decoded_json);
+let object_values = Object.values(parsed_json);
+
+let info_unit_names = [];
+let info_unit_tier = [];
+let info_unit_power = [];
+let info_unit_defense_status = [];
+
+for (i = 0; i < object_values[0].length; i++) {
+    let extracted_values = JSON.parse(JSON.stringify(object_values[0][i]));
+
+    info_unit_names.push(extracted_values.name);
+    info_unit_tier.push(extracted_values.tier);
+    info_unit_power.push(extracted_values.power);
+    info_unit_defense_status.push(extracted_values.is_def);
+}
+
+console.log(info_unit_names);
+console.log(info_unit_tier);
+console.log(info_unit_power);
+console.log(info_unit_defense_status);
 
 const close_buttons = document.querySelectorAll(".close-popup");
 const buttons_behind_popup = document.querySelectorAll(".disable-on-popup");
@@ -49,10 +72,6 @@ function clearAllText() {
     dead_unit_input.value = "";
     hospital_unit_input.value = "";
     output_box.value = "";
-
-    console.log(atob(encoded_json.innerHTML));
-
-
 }
 
 function updateReturnPercentage() {
@@ -195,8 +214,11 @@ function processData() {
     let split_hospital_unit_data = splitTextIntoData(hospital_unit_data, midpoint, terminator);
     let combined_hospital_unit_data = combineCommonUnitTypes(split_hospital_unit_data);
 
-    let dead_units_sorted = sortUnitData(combined_dead_unit_data);
-    let hospital_units_sorted = sortUnitData(combined_hospital_unit_data);
+    let attached_dead_data = attachIdToData(combined_dead_unit_data);
+    let attached_hospital_data = attachIdToData(combined_hospital_unit_data);
+
+    let dead_units_sorted = sortUnitData(attached_dead_data);
+    let hospital_units_sorted = sortUnitData(attached_hospital_data);
 
     let dead_unit_types = [].concat(dead_units_sorted[0]);
     let dead_unit_losses = [].concat(dead_units_sorted[1]);
@@ -348,9 +370,34 @@ function combineCommonUnitTypes(uncombinedUnitData) {
     return overall;
 }
 
-function sortUnitData(combinedUnitData) { 
+function attachIdToData(combinedUnitData) {
     let losses = combinedUnitData[0];
-    let units = combinedUnitData[1];
+    let types = combinedUnitData[1];
+    let id = [];
+    let overall = [];
+
+    for (let i = 0; i < types.length; i++) {
+        for (let j = 0; j < info_unit_names.length; j++) {
+            if (types[i] == info_unit_names[j]) {
+                id.push(j);
+
+                continue;
+            }
+        }
+    }
+
+    overall.push(losses);
+    overall.push(types);
+    overall.push(id);
+
+    console.log(overall);
+
+    return overall;
+}
+
+function sortUnitData(unsortedUnitData) { 
+    let losses = unsortedUnitData[0];
+    let units = unsortedUnitData[1];
     let unit_list = [];
     let recombined_data = [];
 
