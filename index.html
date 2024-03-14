@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Convert Log to Note</title>
+    <title>Format Losses</title>
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
 </head>
 <body>
@@ -20,7 +20,6 @@
         <div id="advanced-options-window" class="popup">
             <div class="div-center">
                 <h3>Advanced Options</h3>
-                <h6>Can't be saved between sessions</h6>
             </div>
             <input title="Totals up the number of units killed by each attacker. Default: ON" type="checkbox" checked>Total up attacker kills</input>
             <br>
@@ -40,9 +39,6 @@
                 <a class="close-popup">Confirm Options</a>
             </div>
             <br>
-            <div class="div-center">
-                <h6>Current Release: v0.91</h6>
-            </div>
         </div>
 
         <div id="hospital-capacity-window" class="popup">
@@ -92,7 +88,7 @@
         <a id="return-percentage" class="small-ribbon-button disable-on-popup">Return Percentage: 30%</a>
         <a id="list-order" class="small-ribbon-button disable-on-popup">List Output Order: Alphabetic</a>
         <div id="output-area">
-            <textarea class="disable-on-popup" id="output" rows="20" cols="158" placeholder="Awaiting output..." readonly></textarea>
+            <textarea class="output disable-on-popup" id="output" rows="20" cols="158" placeholder="Awaiting output..." readonly></textarea>
         </div>
         <a class="disable-on-popup" id="process">Convert 🛠️</a>
         <a class="disable-on-popup" id="copy-output">Copy Output 📄</a>

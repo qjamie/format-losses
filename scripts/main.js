@@ -18,7 +18,7 @@ let return_percentage = document.getElementById("return-percentage");
 let return_percentage_window = document.getElementById("return-percentage-window");
 let set_return_percentage_adjustment = document.getElementById("set-return-percentage-adjustment");
 let new_return_percentage = document.getElementById("new-return-percentage");
-let theme_switcher = document.getElementById("theme-switcher")
+let theme_switcher = document.getElementById("theme-switcher");
 let clear_textboxes = document.getElementById("clear-textboxes");
 
 let encoded_json = document.getElementById("encjson");
@@ -214,11 +214,8 @@ function processData() {
     let split_hospital_unit_data = splitTextIntoData(hospital_unit_data, midpoint, terminator);
     let combined_hospital_unit_data = combineCommonUnitTypes(split_hospital_unit_data);
 
-    let attached_dead_data = attachIdToData(combined_dead_unit_data);
-    let attached_hospital_data = attachIdToData(combined_hospital_unit_data);
-
-    let dead_units_sorted = sortUnitData(attached_dead_data);
-    let hospital_units_sorted = sortUnitData(attached_hospital_data);
+    let dead_units_sorted = sortUnitData(combined_dead_unit_data);
+    let hospital_units_sorted = sortUnitData(combined_hospital_unit_data);
 
     let dead_unit_types = [].concat(dead_units_sorted[0]);
     let dead_unit_losses = [].concat(dead_units_sorted[1]);
@@ -370,31 +367,6 @@ function combineCommonUnitTypes(uncombinedUnitData) {
     return overall;
 }
 
-function attachIdToData(combinedUnitData) {
-    let losses = combinedUnitData[0];
-    let types = combinedUnitData[1];
-    let id = [];
-    let overall = [];
-
-    for (let i = 0; i < types.length; i++) {
-        for (let j = 0; j < info_unit_names.length; j++) {
-            if (types[i] == info_unit_names[j]) {
-                id.push(j);
-
-                continue;
-            }
-        }
-    }
-
-    overall.push(losses);
-    overall.push(types);
-    overall.push(id);
-
-    console.log(overall);
-
-    return overall;
-}
-
 function sortUnitData(unsortedUnitData) { 
     let losses = unsortedUnitData[0];
     let units = unsortedUnitData[1];
@@ -415,7 +387,7 @@ function sortUnitData(unsortedUnitData) {
     }
 
     recombined_data.push(losses);
-    recombined_data.push(units)
+    recombined_data.push(units);
 
     return recombined_data;
 }
