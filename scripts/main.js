@@ -219,9 +219,11 @@ function processData() {
 
     let dead_unit_types = [].concat(dead_units_sorted[0]);
     let dead_unit_losses = [].concat(dead_units_sorted[1]);
+    let dead_attached_ids = [].concat(dead_units_sorted[1]);
 
     let hospital_unit_types = [].concat(hospital_units_sorted[0]);
     let hospital_unit_losses = [].concat(hospital_units_sorted[1]);
+    let hospital_attached_ids = [].concat(hospital_units_sorted[1]);
 
     let find_perma = calculatePermaLosses(dead_units_sorted, hospital_units_sorted);
 
@@ -372,6 +374,7 @@ function sortUnitData(unsortedUnitData) {
     let units = unsortedUnitData[1];
     let unit_list = [];
     let recombined_data = [];
+    let id_list = [];
 
     for (var i = 0; i < losses.length; i++) {
         unit_list.push({'unit_name': units[i], 'units_lost': losses[i]});
@@ -388,6 +391,18 @@ function sortUnitData(unsortedUnitData) {
 
     recombined_data.push(losses);
     recombined_data.push(units);
+
+    for (var i = 0; i < losses.length; i++) {
+        for (var j = 0; j < info_unit_names.length; j++) {
+            if (losses[i] == info_unit_names[j]) id_list.push(j);
+
+            continue;
+        }
+    }
+
+    recombined_data.push(id_list);
+
+    console.log(recombined_data);
 
     return recombined_data;
 }
