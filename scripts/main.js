@@ -219,11 +219,11 @@ function processData() {
 
     let dead_unit_types = [].concat(dead_units_sorted[0]);
     let dead_unit_losses = [].concat(dead_units_sorted[1]);
-    let dead_attached_ids = [].concat(dead_units_sorted[1]);
+    let dead_attached_ids = [].concat(dead_units_sorted[2]);
 
     let hospital_unit_types = [].concat(hospital_units_sorted[0]);
     let hospital_unit_losses = [].concat(hospital_units_sorted[1]);
-    let hospital_attached_ids = [].concat(hospital_units_sorted[1]);
+    let hospital_attached_ids = [].concat(hospital_units_sorted[2]);
 
     let find_perma = calculatePermaLosses(dead_units_sorted, hospital_units_sorted);
 
@@ -231,20 +231,24 @@ function processData() {
     let perma_unit_types = find_perma[0];
 
     let dead_unit_total = dead_unit_losses.reduce((partialSum, a) => partialSum + a, 0);
+    
+
     let hospital_unit_total = hospital_unit_losses.reduce((partialSum, a) => partialSum + a, 0);
+
+
     let perma_unit_total = perma_unit_losses.reduce((partialSum, a) => partialSum + a, 0);
 
     let output_text = "Dead Units -- " + dead_unit_total.toLocaleString("en-US") +  ":\n\n";
-    output_text += createUnitList(dead_unit_types, dead_unit_losses, 1);
+    output_text += createUnitList(dead_unit_types, dead_unit_losses, 1, dead_attached_ids);
 
     output_text += "\nHospital Units -- " + hospital_unit_total.toLocaleString("en-US") + ":\n\n";
-    output_text += createUnitList(hospital_unit_types, hospital_unit_losses, 1);
+    output_text += createUnitList(hospital_unit_types, hospital_unit_losses, 1, hospital_attached_ids);
 
-    output_text += "\nPermanant Losses -- " + perma_unit_total.toLocaleString("en-US") + ":\n\n";
-    output_text += createUnitList(perma_unit_types, perma_unit_losses, 1);
+    //output_text += "\nPermanent Losses -- " + perma_unit_total.toLocaleString("en-US") + ":\n\n";
+    //output_text += createUnitList(perma_unit_types, perma_unit_losses, 1);
 
-    output_text += "\nTo be returned (" + percentage_modifier * 100 +"%):\n\n";
-    output_text += createUnitList(perma_unit_types, perma_unit_losses, percentage_modifier);
+    //output_text += "\nTo be returned (" + percentage_modifier * 100 +"%):\n\n";
+    //output_text += createUnitList(perma_unit_types, perma_unit_losses, percentage_modifier);
 
     fillOutput(output_text);
 }
@@ -433,11 +437,22 @@ function calculatePermaLosses(deadData, hospitalData) {
     return dead_data;
 }
 
-function createUnitList(types, losses, modifier) {
+function createUnitList(types, losses, modifier, info_ids) {
     let text = "";
+    let loop_length = types.length;
 
-    for (var i = 0; i < types.length; i++) {
-        text += types[i] + " x " + Math.trunc(losses[i] * modifier).toLocaleString("en-US") + "\n";
+    console.log(info_ids);
+
+    for (var i = 0; i < loop_length; i++) {
+        let unit_types = types[i];
+        let unit_losses = Math.trunc(losses[i] * modifier).toLocaleString("en-US");
+        let unit_tier = info_unit_tier[info_ids[i]];
+        let combined_power = info_unit_power[info_ids[i]] * Math.trunc(losses[i] * modifier);
+        let unit_power = combined_power.toLocaleString("en-US")
+
+        text += "[Tier " + unit_tier + "] " + unit_types + " x " + unit_losses + " /// Power: " + unit_power + "\n";
+
+        combined_power = 0;
     }
 
     return text;

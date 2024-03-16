@@ -98,7 +98,7 @@ input[type="number"], select {
     justify-content: center;
 }
 
-#overlay, #advanced-options-window, #hospital-capacity-window, #return-percentage-window {
+#overlay, #advanced-options-window, #hospital-capacity-window, #return-percentage-window, #list-order-window {
     opacity: 0;
     display: none;
 }
