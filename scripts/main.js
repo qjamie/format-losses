@@ -20,6 +20,7 @@ let set_return_percentage_adjustment = document.getElementById("set-return-perce
 let new_return_percentage = document.getElementById("new-return-percentage");
 let theme_switcher = document.getElementById("theme-switcher");
 let clear_textboxes = document.getElementById("clear-textboxes");
+let show_unit_properties = document.getElementById("show-unit-properties");
 
 let encoded_json = document.getElementById("encjson");
 let decoded_json = atob(encoded_json.innerHTML);
@@ -51,6 +52,8 @@ const buttons_behind_popup = document.querySelectorAll(".disable-on-popup");
 
 var root = document.querySelector(':root');
 
+let show_properties_enabled = false;
+
 let window_showing = false;
 let is_dark_theme = true;
 let current_window;
@@ -67,11 +70,20 @@ theme_switcher.addEventListener('click', toggleTheme);
 set_hospital_capacity_adjustment.addEventListener('click', updateHospitalCapacity);
 set_return_percentage_adjustment.addEventListener('click', updateReturnPercentage);
 clear_textboxes.addEventListener('click', clearAllText);
+show_unit_properties.addEventListener('click', toggleShowUnitProperties);
 
 function clearAllText() {
     dead_unit_input.value = "";
     hospital_unit_input.value = "";
     output_box.value = "";
+}
+
+function toggleShowUnitProperties() {
+    if (show_unit_properties.checked) {
+        show_properties_enabled = true;
+    } else {
+        show_properties_enabled = false;
+    }
 }
 
 function updateReturnPercentage() {
@@ -203,19 +215,21 @@ function processData() {
     let dead_unit_text = dead_unit_input.value;
     let hospital_unit_text = hospital_unit_input.value;
 
-    let terminator = "END";
+    let line_terminator = "END";
     let midpoint = " x ";
 
-    let dead_unit_data = extractRawText(dead_unit_text, "DEAD UNIT", "died", terminator);
-    let split_dead_unit_data = splitTextIntoData(dead_unit_data, midpoint, terminator);
+    let dead_unit_data = extractRawText(dead_unit_text, "DEAD UNIT", "died", line_terminator);
+    let split_dead_unit_data = splitTextIntoData(dead_unit_data, midpoint, line_terminator);
     let combined_dead_unit_data = combineCommonUnitTypes(split_dead_unit_data);
 
-    let hospital_unit_data = extractRawText(hospital_unit_text, "HOSPITAL UNIT", "added", terminator);
-    let split_hospital_unit_data = splitTextIntoData(hospital_unit_data, midpoint, terminator);
+    let hospital_unit_data = extractRawText(hospital_unit_text, "HOSPITAL UNIT", "added", line_terminator);
+    let split_hospital_unit_data = splitTextIntoData(hospital_unit_data, midpoint, line_terminator);
     let combined_hospital_unit_data = combineCommonUnitTypes(split_hospital_unit_data);
 
     let dead_units_sorted = sortUnitData(combined_dead_unit_data);
     let hospital_units_sorted = sortUnitData(combined_hospital_unit_data);
+
+    /* Array copies are used to avoid incorrect (previously set) data being used after being sorted */
 
     let dead_unit_types = [].concat(dead_units_sorted[0]);
     let dead_unit_losses = [].concat(dead_units_sorted[1]);
@@ -231,24 +245,36 @@ function processData() {
     let perma_unit_types = find_perma[0];
 
     let dead_unit_total = dead_unit_losses.reduce((partialSum, a) => partialSum + a, 0);
-    
-
     let hospital_unit_total = hospital_unit_losses.reduce((partialSum, a) => partialSum + a, 0);
-
-
     let perma_unit_total = perma_unit_losses.reduce((partialSum, a) => partialSum + a, 0);
 
-    let output_text = "Dead Units -- " + dead_unit_total.toLocaleString("en-US") +  ":\n\n";
-    output_text += createUnitList(dead_unit_types, dead_unit_losses, 1, dead_attached_ids);
+    let output_text;
 
-    output_text += "\nHospital Units -- " + hospital_unit_total.toLocaleString("en-US") + ":\n\n";
-    output_text += createUnitList(hospital_unit_types, hospital_unit_losses, 1, hospital_attached_ids);
+    if (show_properties_enabled) {
+        output_text = "Dead Units -- " + dead_unit_total.toLocaleString("en-US") +  ":\n\n";
+        output_text += createUnitList(dead_unit_types, dead_unit_losses, 1, dead_attached_ids);
 
-    //output_text += "\nPermanent Losses -- " + perma_unit_total.toLocaleString("en-US") + ":\n\n";
-    //output_text += createUnitList(perma_unit_types, perma_unit_losses, 1);
+        output_text += "\nHospital Units -- " + hospital_unit_total.toLocaleString("en-US") + ":\n\n";
+        output_text += createUnitList(hospital_unit_types, hospital_unit_losses, 1, hospital_attached_ids);
 
-    //output_text += "\nTo be returned (" + percentage_modifier * 100 +"%):\n\n";
-    //output_text += createUnitList(perma_unit_types, perma_unit_losses, percentage_modifier);
+        //output_text += "\nPermanent Losses -- " + perma_unit_total.toLocaleString("en-US") + ":\n\n";
+        //output_text += createUnitList(perma_unit_types, perma_unit_losses, 1);
+
+        //output_text += "\nTo be returned (" + percentage_modifier * 100 +"%):\n\n";
+        //output_text += createUnitList(perma_unit_types, perma_unit_losses, percentage_modifier);
+    } else {
+        output_text = "Dead Units -- " + dead_unit_total.toLocaleString("en-US") +  ":\n\n";
+        output_text += createUnitList(dead_unit_types, dead_unit_losses, 1);
+
+        output_text += "\nHospital Units -- " + hospital_unit_total.toLocaleString("en-US") + ":\n\n";
+        output_text += createUnitList(hospital_unit_types, hospital_unit_losses, 1);
+
+        output_text += "\nPermanent Losses -- " + perma_unit_total.toLocaleString("en-US") + ":\n\n";
+        output_text += createUnitList(perma_unit_types, perma_unit_losses, 1);
+
+        output_text += "\nTo be returned (" + percentage_modifier * 100 +"%):\n\n";
+        output_text += createUnitList(perma_unit_types, perma_unit_losses, percentage_modifier);
+    }
 
     fillOutput(output_text);
 }
@@ -437,7 +463,7 @@ function calculatePermaLosses(deadData, hospitalData) {
     return dead_data;
 }
 
-function createUnitList(types, losses, modifier, info_ids) {
+function createUnitList(types, losses, modifier, info_ids = null) {
     let text = "";
     let loop_length = types.length;
 
@@ -446,11 +472,21 @@ function createUnitList(types, losses, modifier, info_ids) {
     for (var i = 0; i < loop_length; i++) {
         let unit_types = types[i];
         let unit_losses = Math.trunc(losses[i] * modifier).toLocaleString("en-US");
-        let unit_tier = info_unit_tier[info_ids[i]];
-        let combined_power = info_unit_power[info_ids[i]] * Math.trunc(losses[i] * modifier);
-        let unit_power = combined_power.toLocaleString("en-US")
 
-        text += "[Tier " + unit_tier + "] " + unit_types + " x " + unit_losses + " /// Power: " + unit_power + "\n";
+        let unit_tier;
+        let unit_power; 
+        
+        if (info_ids != null) {
+            unit_tier = info_unit_tier[info_ids[i]];
+            let combined_power = info_unit_power[info_ids[i]] * Math.trunc(losses[i] * modifier);
+            unit_power = combined_power.toLocaleString("en-US");
+        }
+
+        if (info_ids != null) {
+            text += "[Tier " + unit_tier + "] " + unit_types + " x " + unit_losses + " /// Power: " + unit_power + "\n";
+        } else {
+            text += unit_types + " x " + unit_losses + "\n";
+        }
 
         combined_power = 0;
     }
