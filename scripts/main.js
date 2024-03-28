@@ -8,12 +8,15 @@ let copy_output = document.getElementById("copy-output");
 let copy_output_window = document.getElementById("overlay");
 let advanced_options = document.getElementById("advanced-options");
 let advanced_options_window = document.getElementById("advanced-options-window");
-let hospital_capacity = document.getElementById("hospital-capacity");
+
+//let hospital_capacity = document.getElementById("hospital-capacity");
+
 let hospital_capacity_window = document.getElementById("hospital-capacity-window");
 let list_order = document.getElementById("list-order");
 let list_order_window = document.getElementById("list-order-window");
 let set_hospital_capacity_adjustment = document.getElementById("set-hospital-capacity-adjustment");
 let new_hospital_capacity = document.getElementById("new-hospital-capacity");
+let enable_return_percentage = document.getElementById("enable-return-percentage")
 let return_percentage = document.getElementById("return-percentage");
 let return_percentage_window = document.getElementById("return-percentage-window");
 let set_return_percentage_adjustment = document.getElementById("set-return-percentage-adjustment");
@@ -58,6 +61,7 @@ let show_defences_enabled = false;
 
 let option_status = 0;
 
+let return_perma = false;
 let window_showing = false;
 let is_dark_theme = true;
 let current_window;
@@ -67,7 +71,9 @@ let percentage_modifier = 0.3;
 copy_output.addEventListener('click', copyToClipboard);
 process_button.addEventListener('click', processData);
 advanced_options.addEventListener('click', function() {showWindowPopup(advanced_options_window)});
-hospital_capacity.addEventListener('click', function() {showWindowPopup(hospital_capacity_window)});
+
+//hospital_capacity.addEventListener('click', function() {showWindowPopup(hospital_capacity_window)});
+
 return_percentage.addEventListener('click', function() {showWindowPopup(return_percentage_window)});
 list_order.addEventListener('click', function() {showWindowPopup(list_order_window)});
 theme_switcher.addEventListener('click', toggleTheme);
@@ -75,6 +81,8 @@ set_hospital_capacity_adjustment.addEventListener('click', updateHospitalCapacit
 set_return_percentage_adjustment.addEventListener('click', updateReturnPercentage);
 clear_textboxes.addEventListener('click', clearAllText);
 show_unit_properties.addEventListener('click', toggleShowUnitProperties);
+show_defences.addEventListener('click', toggleShowDefences);
+enable_return_percentage.addEventListener('click', toggleReturnPercentage)
 
 function clearAllText() {
     dead_unit_input.value = "";
@@ -82,11 +90,31 @@ function clearAllText() {
     output_box.value = "";
 }
 
+function toggleReturnPercentage() {
+    if (return_perma) {
+        enable_return_percentage.textContent = "Return Perma-Losses: ❌";
+        return_perma = false;
+        return_percentage.classList.add("rp-disabled");
+    } else {
+        enable_return_percentage.textContent = "Return Perma-Losses: ✅";
+        return_perma = true;
+        return_percentage.classList.remove("rp-disabled");
+    }
+}
+
 function toggleShowUnitProperties() {
     if (show_unit_properties.checked) {
         show_properties_enabled = true;
     } else {
         show_properties_enabled = false;
+    }
+}
+
+function toggleShowDefences() {
+    if (show_defences.checked) {
+        show_defences_enabled = true;
+    } else {
+        show_defences_enabled = false;
     }
 }
 
@@ -216,13 +244,11 @@ function copyToClipboard() {
 }
 
 function processData() {
+    option_status = 0;
+
     if (show_properties_enabled) {
         option_status = 1;
     }
-    
-    if (show_defences_enabled) {
-        option_status = 2;
-    }    
 
     let dead_unit_text = dead_unit_input.value;
     let hospital_unit_text = hospital_unit_input.value;
@@ -270,10 +296,14 @@ function processData() {
     output_text += createUnitList(hospital_unit_types, hospital_unit_losses, 1, option_status, hospital_attached_ids);
 
     output_text += "\nPermanent Losses -- " + perma_unit_total.toLocaleString("en-US") + ":\n\n";
-    output_text += createUnitList(perma_unit_types, perma_unit_losses, 1, option_status, perma_attached_ids);
+    output_text += createUnitList(perma_unit_types, perma_unit_losses, 1, option_status, perma_attached_ids, true);
 
-    output_text += "\nTo be returned (" + percentage_modifier * 100 +"%):\n\n";
+    if (return_perma) {
+
+    output_text += "\nTo be returned (" + Math.trunc(percentage_modifier * 100) +"%):\n\n";
     output_text += createUnitList(perma_unit_types, perma_unit_losses, percentage_modifier, option_status, perma_attached_ids);
+
+    }
 
     fillOutput(output_text);
 }
@@ -484,9 +514,10 @@ function calculatePermaLosses(deadData, hospitalData) {
     return dead_data;
 }
 
-function createUnitList(types, losses, multiply_modifier, display_status, info_ids = null) {
+function createUnitList(types, losses, multiply_modifier, display_status, info_ids = null, perma = false) {
     let text = "";
     let loop_length = types.length;
+    let total_combined_power = 0;
 
     for (var i = 0; i < loop_length; i++) {
         let unit_types = types[i];
@@ -497,22 +528,22 @@ function createUnitList(types, losses, multiply_modifier, display_status, info_i
         
         if (display_status == 1) {
             unit_tier = info_unit_tier[info_ids[i]];
-        }
-
-        if (display_status == 2) {
             let combined_power = info_unit_power[info_ids[i]] * Math.trunc(losses[i] * multiply_modifier);
+            total_combined_power += combined_power;
             unit_power = combined_power.toLocaleString("en-US");
         }
 
         if (display_status == 1) {
-            text += "[Tier " + unit_tier + "] " + unit_types + " x " + unit_losses + "\n";
-        } else if (display_status == 2) {
-            text += unit_types + " x " + unit_losses + " /// Power: " + unit_power + "\n";
+            text += "[T" + unit_tier + "] " + unit_types + " x " + unit_losses + "\n";
         } else {
             text += unit_types + " x " + unit_losses + "\n";
         }
 
         combined_power = 0;
+    }
+
+    if (display_status == 1 && perma) {
+        text +="\nTotal Power Lost: " + total_combined_power.toLocaleString("en-US") + "\n";
     }
 
     return text;

@@ -148,6 +148,12 @@ input[type="number"], select {
     pointer-events: none;
 }
 
+.rp-disabled {
+    color: grey;
+    border-color: grey;
+    pointer-events: none;
+}
+
 ::-webkit-scrollbar {
     width: 10px;
 }
