@@ -1,3 +1,13 @@
+/*
+future features
+
+let hospital_capacity = document.getElementById("hospital-capacity");
+let list_order = document.getElementById("list-order");
+
+hospital_capacity.addEventListener('click', function() {showWindowPopup(hospital_capacity_window)});
+list_order.addEventListener('click', function() {showWindowPopup(list_order_window)});
+*/
+
 let dead_unit_input = document.getElementById("dead-units");
 let hospital_unit_input = document.getElementById("hospital-units");
 let output_box = document.getElementById("output");
@@ -8,11 +18,7 @@ let copy_output = document.getElementById("copy-output");
 let copy_output_window = document.getElementById("overlay");
 let advanced_options = document.getElementById("advanced-options");
 let advanced_options_window = document.getElementById("advanced-options-window");
-
-//let hospital_capacity = document.getElementById("hospital-capacity");
-
 let hospital_capacity_window = document.getElementById("hospital-capacity-window");
-let list_order = document.getElementById("list-order");
 let list_order_window = document.getElementById("list-order-window");
 let set_hospital_capacity_adjustment = document.getElementById("set-hospital-capacity-adjustment");
 let new_hospital_capacity = document.getElementById("new-hospital-capacity");
@@ -25,39 +31,31 @@ let theme_switcher = document.getElementById("theme-switcher");
 let clear_textboxes = document.getElementById("clear-textboxes");
 let show_unit_properties = document.getElementById("show-unit-properties");
 let show_defences = document.getElementById("show-defences");
-
-let encoded_json = document.getElementById("encjson");
-let decoded_json = atob(encoded_json.innerHTML);
-
-let parsed_json = JSON.parse(decoded_json);
-let object_values = Object.values(parsed_json);
-
-let info_unit_names = [];
-let info_unit_tier = [];
-let info_unit_power = [];
-let info_unit_defense_status = [];
-
-for (i = 0; i < object_values[0].length; i++) {
-    let extracted_values = JSON.parse(JSON.stringify(object_values[0][i]));
-
-    info_unit_names.push(extracted_values.name);
-    info_unit_tier.push(extracted_values.tier);
-    info_unit_power.push(extracted_values.power);
-    info_unit_defense_status.push(extracted_values.is_def);
-}
-
-console.log(info_unit_names);
-console.log(info_unit_tier);
-console.log(info_unit_power);
-console.log(info_unit_defense_status);
+let game_switcher = document.getElementById("game-switcher");
+let error_message = document.getElementById("error-message");
+let error_code_text = document.getElementById("error-code");
+let error_message_content = document.getElementById("error-message-content")
 
 const close_buttons = document.querySelectorAll(".close-popup");
 const buttons_behind_popup = document.querySelectorAll(".disable-on-popup");
 
 var root = document.querySelector(':root');
 
+let game = 0;
+
 let show_properties_enabled = false;
 let show_defences_enabled = false;
+
+let encoded_json_one;
+let decoded_json;
+
+let parsed_json;
+let object_values;
+
+let info_unit_names = [];
+let info_unit_tier = [];
+let info_unit_power = [];
+let info_unit_defense_status = [];
 
 let option_status = 0;
 
@@ -71,18 +69,15 @@ let percentage_modifier = 0.3;
 copy_output.addEventListener('click', copyToClipboard);
 process_button.addEventListener('click', processData);
 advanced_options.addEventListener('click', function() {showWindowPopup(advanced_options_window)});
-
-//hospital_capacity.addEventListener('click', function() {showWindowPopup(hospital_capacity_window)});
-
 return_percentage.addEventListener('click', function() {showWindowPopup(return_percentage_window)});
-list_order.addEventListener('click', function() {showWindowPopup(list_order_window)});
 theme_switcher.addEventListener('click', toggleTheme);
 set_hospital_capacity_adjustment.addEventListener('click', updateHospitalCapacity);
 set_return_percentage_adjustment.addEventListener('click', updateReturnPercentage);
 clear_textboxes.addEventListener('click', clearAllText);
 show_unit_properties.addEventListener('click', toggleShowUnitProperties);
 show_defences.addEventListener('click', toggleShowDefences);
-enable_return_percentage.addEventListener('click', toggleReturnPercentage)
+enable_return_percentage.addEventListener('click', toggleReturnPercentage);
+game_switcher.addEventListener('click', toggleGame);
 
 function clearAllText() {
     dead_unit_input.value = "";
@@ -105,8 +100,25 @@ function toggleReturnPercentage() {
 function toggleShowUnitProperties() {
     if (show_unit_properties.checked) {
         show_properties_enabled = true;
+        game_switcher.classList.remove("gs-hidden");
+
+        encoded_json_one = document.getElementById("encjson");
+        decoded_json = atob(encoded_json_one.innerHTML);
+
+        parsed_json = JSON.parse(decoded_json);
+        object_values = Object.values(parsed_json);
+
+        for (i = 0; i < object_values[0].length; i++) {
+            let extracted_values = JSON.parse(JSON.stringify(object_values[0][i]));
+    
+            info_unit_names.push(extracted_values.name);
+            info_unit_tier.push(extracted_values.tier);
+            info_unit_power.push(extracted_values.power);
+            info_unit_defense_status.push(extracted_values.is_def);
+        }
     } else {
         show_properties_enabled = false;
+        game_switcher.classList.add("gs-hidden");
     }
 }
 
@@ -133,16 +145,56 @@ for (let i = 0; i < close_buttons.length; i++) {
 }
 
 function toggleTheme() {
-    if (is_dark_theme) {
-        theme_switcher.textContent = "Current Theme: ☀️";
-        is_dark_theme = false;
-        changeThemeLight();
-    } else {
-        theme_switcher.textContent = "Current Theme: 🌙";
-        is_dark_theme = true;
-        changeThemeDark();
+    switch(is_dark_theme) {
+        case true:
+            theme_switcher.textContent = "Website Theme: ☀️";
+            is_dark_theme = false;
+            changeThemeLight();
+            break;
+        case false:
+        default:
+            theme_switcher.textContent = "Website Theme: 🌙";
+            is_dark_theme = true;
+            changeThemeDark();
+            break;
     }
 }
+
+function toggleGame() {
+    switch(game) {
+        case 0:
+            game_switcher.textContent = "Warhammer: Chaos and Conquest ⚔️";
+            //let encoded_json_war = document.getElementById("encjson2");
+            //decoded_json = atob(encoded_json_one.innerHTML);
+            game = 1;
+            break;
+        case 1:
+            game_switcher.textContent = "Godzilla x Kong: Titan Chasers 🦖";
+            //let encoded_json_gxk = document.getElementById("encjson3");
+            //decoded_json = atob(encoded_json_one.innerHTML);
+            game = 2;
+            break;
+        case 2:
+        default:
+            game_switcher.textContent = "Operation: New Earth 🛸";
+            //decoded_json = atob(encoded_json_one.innerHTML);
+            game = 0;
+            break;
+    }
+
+    parsed_json = JSON.parse(decoded_json);
+    object_values = Object.values(parsed_json);
+
+    for (i = 0; i < object_values[0].length; i++) {
+        let extracted_values = JSON.parse(JSON.stringify(object_values[0][i]));
+
+        info_unit_names.push(extracted_values.name);
+        info_unit_tier.push(extracted_values.tier);
+        info_unit_power.push(extracted_values.power);
+        info_unit_defense_status.push(extracted_values.is_def);
+    }
+}
+
 
 function changeThemeLight() {
     root.style.setProperty('--button-bg', 'eeeeee');
@@ -166,7 +218,20 @@ function changeThemeDark() {
     root.style.setProperty('--button-active', '#505050');
 }
 
-function showWindowPopup(window) {
+function showWindowPopup(window, error_code = -1) {
+    if (error_code > -1) {
+        error_code_text.textContent = "Error Code " + error_code;
+
+        switch(error_code) {
+            case 0:
+                error_message_content.innerHTML = "Example error message, should not show up during runtime<br><br>Send me a message if you see this, along with what you did";
+                break;
+            case 1:
+                error_message_content.innerHTML = "Negative perma-losses - likely caused by too many hospital units<br><br>Make sure you have copied both logs correctly before processing";
+                break;
+        }
+    }
+
     window.style.display = "block";
     root.style.setProperty('cursor', 'default');
     current_window = window;
@@ -286,6 +351,11 @@ function processData() {
     let dead_unit_total = dead_unit_losses.reduce((partialSum, a) => partialSum + a, 0);
     let hospital_unit_total = hospital_unit_losses.reduce((partialSum, a) => partialSum + a, 0);
     let perma_unit_total = perma_unit_losses.reduce((partialSum, a) => partialSum + a, 0);
+
+    if (perma_unit_total < 0) {
+        showWindowPopup(error_message, 1);
+        return;
+    }
 
     let output_text;
 
@@ -466,11 +536,6 @@ function sortUnitData(unsortedUnitData) {
         for (var j = 0; j < info_unit_defense_status.length; j++) {
             if(!show_defences_enabled) {
 
-                    console.log(recombined_data[0][i]);
-                    console.log(info_unit_names[j]);
-                    console.log(info_unit_defense_status[j]);
-                    console.log(j);
-
                 if (recombined_data[0][i] == info_unit_names[j] && info_unit_defense_status[j] == true) {
                     recombined_data[0].splice(i, 1);
                     recombined_data[1].splice(i, 1);
@@ -481,8 +546,6 @@ function sortUnitData(unsortedUnitData) {
             }
         }
     }
-
-    console.log(recombined_data);
 
     return recombined_data;
 }
@@ -522,15 +585,13 @@ function createUnitList(types, losses, multiply_modifier, display_status, info_i
     for (var i = 0; i < loop_length; i++) {
         let unit_types = types[i];
         let unit_losses = Math.trunc(losses[i] * multiply_modifier).toLocaleString("en-US");
-
         let unit_tier;
-        let unit_power; 
-        
+
         if (display_status == 1) {
             unit_tier = info_unit_tier[info_ids[i]];
+
             let combined_power = info_unit_power[info_ids[i]] * Math.trunc(losses[i] * multiply_modifier);
             total_combined_power += combined_power;
-            unit_power = combined_power.toLocaleString("en-US");
         }
 
         if (display_status == 1) {

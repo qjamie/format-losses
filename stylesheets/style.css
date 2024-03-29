@@ -28,7 +28,7 @@ header, main {
     text-align: center;
 }
 
-h1 {
+h1, h2, h3, h4, h5, h6 {
     color: var(--button-highlight)
 }
 
@@ -43,6 +43,7 @@ a {
     transition: 0.25s;
     font-size: 14px;
     margin: 0 auto;
+    user-select: none;
 }
 
 textarea {
@@ -66,9 +67,10 @@ textarea, hr {
 }
 
 a:hover {
-    background-color: var(--button-hover);
+    background-color: var(--button-highlight);
+    color: var(--body-bg);
     transition: 0.25s;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 a:active {
@@ -98,7 +100,7 @@ input[type="number"], select {
     justify-content: center;
 }
 
-#overlay, #advanced-options-window, #hospital-capacity-window, #return-percentage-window, #list-order-window {
+#overlay, #advanced-options-window, #hospital-capacity-window, #return-percentage-window, #list-order-window, #error-message, .gs-hidden {
     opacity: 0;
     display: none;
 }
