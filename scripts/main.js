@@ -39,28 +39,27 @@ let error_message_content = document.getElementById("error-message-content")
 const close_buttons = document.querySelectorAll(".close-popup");
 const buttons_behind_popup = document.querySelectorAll(".disable-on-popup");
 
-var root = document.querySelector(':root');
+let css_root_element = document.querySelector(':root');
 
-let game = 0;
+let selected_game = 0;
+let option_status = 0;
 
 let show_properties_enabled = false;
 let show_defences_enabled = false;
 
-let encoded_json_one;
-let decoded_json;
+let encoded_json_one_units;
+let decoded_unit_json;
 
-let parsed_json;
-let object_values;
+let parsed_unit_json;
+let split_parsed_unit_data;
 
 let info_unit_names = [];
 let info_unit_tier = [];
 let info_unit_power = [];
 let info_unit_defense_status = [];
 
-let option_status = 0;
-
-let return_perma = false;
-let window_showing = false;
+let perma_to_be_returned = false;
+let window_is_currently_showing = false;
 let is_dark_theme = true;
 let current_window;
 
@@ -86,13 +85,13 @@ function clearAllText() {
 }
 
 function toggleReturnPercentage() {
-    if (return_perma) {
+    if (perma_to_be_returned) {
         enable_return_percentage.textContent = "Return Perma-Losses: ❌";
-        return_perma = false;
+        perma_to_be_returned = false;
         return_percentage.classList.add("rp-disabled");
     } else {
         enable_return_percentage.textContent = "Return Perma-Losses: ✅";
-        return_perma = true;
+        perma_to_be_returned = true;
         return_percentage.classList.remove("rp-disabled");
     }
 }
@@ -102,19 +101,19 @@ function toggleShowUnitProperties() {
         show_properties_enabled = true;
         game_switcher.classList.remove("gs-hidden");
 
-        encoded_json_one = document.getElementById("encjson");
-        decoded_json = atob(encoded_json_one.innerHTML);
+        encoded_json_one_units = document.getElementById("encjson");
+        decoded_unit_json = atob(encoded_json_one_units.innerHTML);
 
-        parsed_json = JSON.parse(decoded_json);
-        object_values = Object.values(parsed_json);
+        parsed_unit_json = JSON.parse(decoded_unit_json);
+        split_parsed_unit_data = Object.values(parsed_unit_json);
 
-        for (i = 0; i < object_values[0].length; i++) {
-            let extracted_values = JSON.parse(JSON.stringify(object_values[0][i]));
+        for (i = 0; i < split_parsed_unit_data[0].length; i++) {
+            let extracted_unit_data = JSON.parse(JSON.stringify(split_parsed_unit_data[0][i]));
     
-            info_unit_names.push(extracted_values.name);
-            info_unit_tier.push(extracted_values.tier);
-            info_unit_power.push(extracted_values.power);
-            info_unit_defense_status.push(extracted_values.is_def);
+            info_unit_names.push(extracted_unit_data.name);
+            info_unit_tier.push(extracted_unit_data.tier);
+            info_unit_power.push(extracted_unit_data.power);
+            info_unit_defense_status.push(extracted_unit_data.is_def);
         }
     } else {
         show_properties_enabled = false;
@@ -161,32 +160,32 @@ function toggleTheme() {
 }
 
 function toggleGame() {
-    switch(game) {
+    switch(selected_game) {
         case 0:
-            game_switcher.textContent = "Warhammer: Chaos and Conquest ⚔️";
+            game_switcher.textContent = "WAR Mode ⚔️";
             //let encoded_json_war = document.getElementById("encjson2");
             //decoded_json = atob(encoded_json_one.innerHTML);
-            game = 1;
+            selected_game = 1;
             break;
         case 1:
-            game_switcher.textContent = "Godzilla x Kong: Titan Chasers 🦖";
+            game_switcher.textContent = "GXK Mode 🦖";
             //let encoded_json_gxk = document.getElementById("encjson3");
             //decoded_json = atob(encoded_json_one.innerHTML);
-            game = 2;
+            selected_game = 2;
             break;
         case 2:
         default:
-            game_switcher.textContent = "Operation: New Earth 🛸";
+            game_switcher.textContent = "ONE Mode 🛸";
             //decoded_json = atob(encoded_json_one.innerHTML);
-            game = 0;
+            selected_game = 0;
             break;
     }
 
-    parsed_json = JSON.parse(decoded_json);
-    object_values = Object.values(parsed_json);
+    parsed_unit_json = JSON.parse(decoded_unit_json);
+    split_parsed_unit_data = Object.values(parsed_unit_json);
 
-    for (i = 0; i < object_values[0].length; i++) {
-        let extracted_values = JSON.parse(JSON.stringify(object_values[0][i]));
+    for (i = 0; i < split_parsed_unit_data[0].length; i++) {
+        let extracted_values = JSON.parse(JSON.stringify(split_parsed_unit_data[0][i]));
 
         info_unit_names.push(extracted_values.name);
         info_unit_tier.push(extracted_values.tier);
@@ -197,25 +196,25 @@ function toggleGame() {
 
 
 function changeThemeLight() {
-    root.style.setProperty('--button-bg', 'eeeeee');
-    root.style.setProperty('--button-highlight', 'black');
-    root.style.setProperty('--textarea-bg', '#e8e8e8');
-    root.style.setProperty('--scrollbar-thumb', '#c9c9c9');
-    root.style.setProperty('--scrollbar-thumb-hover', '#adadad');
-    root.style.setProperty('--body-bg', 'whitesmoke');
-    root.style.setProperty('--button-hover', '#e8e8e8');
-    root.style.setProperty('--button-active', '#c9c9c9');
+    css_root_element.style.setProperty('--button-bg', 'eeeeee');
+    css_root_element.style.setProperty('--button-highlight', 'black');
+    css_root_element.style.setProperty('--textarea-bg', '#e8e8e8');
+    css_root_element.style.setProperty('--scrollbar-thumb', '#c9c9c9');
+    css_root_element.style.setProperty('--scrollbar-thumb-hover', '#adadad');
+    css_root_element.style.setProperty('--body-bg', 'whitesmoke');
+    css_root_element.style.setProperty('--button-hover', '#e8e8e8');
+    css_root_element.style.setProperty('--button-active', '#c9c9c9');
 }
 
 function changeThemeDark() {
-    root.style.setProperty('--button-bg', '#131313');
-    root.style.setProperty('--button-highlight', 'white');
-    root.style.setProperty('--textarea-bg', '#111111');
-    root.style.setProperty('--scrollbar-thumb', '#323232');
-    root.style.setProperty('--scrollbar-thumb-hover', '#404040');
-    root.style.setProperty('--body-bg', '#191919');
-    root.style.setProperty('--button-hover', '#252525');
-    root.style.setProperty('--button-active', '#505050');
+    css_root_element.style.setProperty('--button-bg', '#131313');
+    css_root_element.style.setProperty('--button-highlight', 'white');
+    css_root_element.style.setProperty('--textarea-bg', '#111111');
+    css_root_element.style.setProperty('--scrollbar-thumb', '#323232');
+    css_root_element.style.setProperty('--scrollbar-thumb-hover', '#404040');
+    css_root_element.style.setProperty('--body-bg', '#191919');
+    css_root_element.style.setProperty('--button-hover', '#252525');
+    css_root_element.style.setProperty('--button-active', '#505050');
 }
 
 function showWindowPopup(window, error_code = -1) {
@@ -233,7 +232,7 @@ function showWindowPopup(window, error_code = -1) {
     }
 
     window.style.display = "block";
-    root.style.setProperty('cursor', 'default');
+    css_root_element.style.setProperty('cursor', 'default');
     current_window = window;
 
     setTimeout(() => {
@@ -241,7 +240,7 @@ function showWindowPopup(window, error_code = -1) {
     }, "50");
 
     setTimeout(() => {
-    window_showing = true;
+    window_is_currently_showing = true;
     }, "50");
 
     for (let i = 0; i < buttons_behind_popup.length; i++) { 
@@ -259,7 +258,7 @@ function hideWindowPopup() {
         buttons_behind_popup[i].classList.remove("disable-anchor-tags");
     }
 
-    if (window_showing) {
+    if (window_is_currently_showing) {
         window.style.opacity = '0';
         
         setTimeout(() => {
@@ -267,7 +266,7 @@ function hideWindowPopup() {
         }, "300");
 
         setTimeout(() => {
-            window_showing = false;
+            window_is_currently_showing = false;
         }, "50");
     }
 }
@@ -365,10 +364,14 @@ function processData() {
     output_text += "\nHospital Units -- " + hospital_unit_total.toLocaleString("en-US") + ":\n\n";
     output_text += createUnitList(hospital_unit_types, hospital_unit_losses, 1, option_status, hospital_attached_ids);
 
-    output_text += "\nPermanent Losses -- " + perma_unit_total.toLocaleString("en-US") + ":\n\n";
-    output_text += createUnitList(perma_unit_types, perma_unit_losses, 1, option_status, perma_attached_ids, true);
+    if (perma_unit_total > 0) {
+        output_text += "\nPermanent Losses -- " + perma_unit_total.toLocaleString("en-US") + ":\n\n";
+        output_text += createUnitList(perma_unit_types, perma_unit_losses, 1, option_status, perma_attached_ids, true);
+    } else {
+        output_text += "\nNo perma-losses recorded in attack ";
+    }
 
-    if (return_perma) {
+    if (perma_to_be_returned) {
 
     output_text += "\nTo be returned (" + Math.trunc(percentage_modifier * 100) +"%):\n\n";
     output_text += createUnitList(perma_unit_types, perma_unit_losses, percentage_modifier, option_status, perma_attached_ids);

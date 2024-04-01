@@ -105,6 +105,20 @@ input[type="number"], select {
     display: none;
 }
 
+#error-code {
+    color: #ff6262;
+    border-color: #ff6262;
+}
+
+#error-message, #error-message > div > a {
+    border-color: #ff6262;
+}
+
+#error-message > div > a:hover {
+    background-color: #ff6262;
+    color: var(--body-bg);
+}
+
 #advanced-options-window {
     text-align: left;
 }
@@ -148,6 +162,7 @@ input[type="number"], select {
 
 .disable-anchor-tags {
     pointer-events: none;
+    user-select: none;
 }
 
 .rp-disabled {
