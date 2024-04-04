@@ -31,10 +31,11 @@ let theme_switcher = document.getElementById("theme-switcher");
 let clear_textboxes = document.getElementById("clear-textboxes");
 let show_unit_properties = document.getElementById("show-unit-properties");
 let show_defences = document.getElementById("show-defences");
+let auto_bypass_errors = document.getElementById("auto-bypass-errors");
 let game_switcher = document.getElementById("game-switcher");
 let error_message = document.getElementById("error-message");
 let error_code_text = document.getElementById("error-code");
-let error_message_content = document.getElementById("error-message-content")
+let error_message_content = document.getElementById("error-message-content");
 
 const close_buttons = document.querySelectorAll(".close-popup");
 const buttons_behind_popup = document.querySelectorAll(".disable-on-popup");
@@ -46,6 +47,7 @@ let option_status = 0;
 
 let show_properties_enabled = false;
 let show_defences_enabled = false;
+let auto_bypass_errors_enabled = false;
 
 let encoded_json_one_units;
 let decoded_unit_json;
@@ -65,6 +67,21 @@ let current_window;
 
 let percentage_modifier = 0.3;
 
+encoded_json_one_units = document.getElementById("encjson");
+decoded_unit_json = atob(encoded_json_one_units.innerHTML);
+
+parsed_unit_json = JSON.parse(decoded_unit_json);
+split_parsed_unit_data = Object.values(parsed_unit_json);
+
+for (i = 0; i < split_parsed_unit_data[0].length; i++) {
+    let extracted_unit_data = JSON.parse(JSON.stringify(split_parsed_unit_data[0][i]));
+
+    info_unit_names.push(extracted_unit_data.name);
+    info_unit_tier.push(extracted_unit_data.tier);
+    info_unit_power.push(extracted_unit_data.power);
+    info_unit_defense_status.push(extracted_unit_data.is_def);
+}
+
 copy_output.addEventListener('click', copyToClipboard);
 process_button.addEventListener('click', processData);
 advanced_options.addEventListener('click', function() {showWindowPopup(advanced_options_window)});
@@ -75,6 +92,7 @@ set_return_percentage_adjustment.addEventListener('click', updateReturnPercentag
 clear_textboxes.addEventListener('click', clearAllText);
 show_unit_properties.addEventListener('click', toggleShowUnitProperties);
 show_defences.addEventListener('click', toggleShowDefences);
+auto_bypass_errors.addEventListener('click', toggleAutoBypassErrors);
 enable_return_percentage.addEventListener('click', toggleReturnPercentage);
 game_switcher.addEventListener('click', toggleGame);
 
@@ -100,21 +118,6 @@ function toggleShowUnitProperties() {
     if (show_unit_properties.checked) {
         show_properties_enabled = true;
         game_switcher.classList.remove("gs-hidden");
-
-        encoded_json_one_units = document.getElementById("encjson");
-        decoded_unit_json = atob(encoded_json_one_units.innerHTML);
-
-        parsed_unit_json = JSON.parse(decoded_unit_json);
-        split_parsed_unit_data = Object.values(parsed_unit_json);
-
-        for (i = 0; i < split_parsed_unit_data[0].length; i++) {
-            let extracted_unit_data = JSON.parse(JSON.stringify(split_parsed_unit_data[0][i]));
-    
-            info_unit_names.push(extracted_unit_data.name);
-            info_unit_tier.push(extracted_unit_data.tier);
-            info_unit_power.push(extracted_unit_data.power);
-            info_unit_defense_status.push(extracted_unit_data.is_def);
-        }
     } else {
         show_properties_enabled = false;
         game_switcher.classList.add("gs-hidden");
@@ -126,6 +129,14 @@ function toggleShowDefences() {
         show_defences_enabled = true;
     } else {
         show_defences_enabled = false;
+    }
+}
+
+function toggleAutoBypassErrors() {
+    if (auto_bypass_errors.checked) {
+        auto_bypass_errors_enabled = true;
+    } else {
+        auto_bypass_errors_enabled = false;
     }
 }
 
@@ -226,7 +237,7 @@ function showWindowPopup(window, error_code = -1) {
                 error_message_content.innerHTML = "Example error message, should not show up during runtime<br><br>Send me a message if you see this, along with what you did";
                 break;
             case 1:
-                error_message_content.innerHTML = "Negative perma-losses - likely caused by too many hospital units<br><br>Make sure you have copied both logs correctly before processing";
+                error_message_content.innerHTML = "Negative perma-losses - likely caused by too many hospital units<br><br>Make sure you have copied both logs correctly";
                 break;
         }
     }
@@ -314,6 +325,10 @@ function processData() {
         option_status = 1;
     }
 
+    let output_text = "";
+
+    let units_are_invalid = false;
+
     let dead_unit_text = dead_unit_input.value;
     let hospital_unit_text = hospital_unit_input.value;
 
@@ -351,14 +366,24 @@ function processData() {
     let hospital_unit_total = hospital_unit_losses.reduce((partialSum, a) => partialSum + a, 0);
     let perma_unit_total = perma_unit_losses.reduce((partialSum, a) => partialSum + a, 0);
 
-    if (perma_unit_total < 0) {
-        showWindowPopup(error_message, 1);
-        return;
+    for (i = 0; i < perma_unit_losses.length; i++) {
+        if (perma_unit_losses[i] < 0) {
+            units_are_invalid = true;
+        }
     }
 
-    let output_text;
+    if (!auto_bypass_errors_enabled) {
+        if (perma_unit_total < 0 || units_are_invalid) {
+            showWindowPopup(error_message, 1);
+            return;
+        }
+    }
 
-    output_text = "Dead Units -- " + dead_unit_total.toLocaleString("en-US") +  ":\n\n";
+    if (auto_bypass_errors_enabled) {
+        output_text += "[ERRORS BYPASSED - THESE RESULTS ARE VERY LIKELY INACCURATE]\n\n";
+    }
+
+    output_text += "Dead Units -- " + dead_unit_total.toLocaleString("en-US") +  ":\n\n";
     output_text += createUnitList(dead_unit_types, dead_unit_losses, 1, option_status, dead_attached_ids);
 
     output_text += "\nHospital Units -- " + hospital_unit_total.toLocaleString("en-US") + ":\n\n";
@@ -537,7 +562,7 @@ function sortUnitData(unsortedUnitData) {
 
     for (var i = 0; i < recombined_data[0].length; i++) {
         for (var j = 0; j < info_unit_defense_status.length; j++) {
-            if(!show_defences_enabled) {
+            if (!show_defences_enabled) {
 
                 if (recombined_data[0][i] == info_unit_names[j] && info_unit_defense_status[j] == true) {
                     recombined_data[0].splice(i, 1);
