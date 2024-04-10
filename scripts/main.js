@@ -49,7 +49,7 @@ let show_properties_enabled = false;
 let show_defences_enabled = false;
 let auto_bypass_errors_enabled = false;
 
-let encoded_json_one_units;
+let encoded_json_one;
 let decoded_unit_json;
 
 let parsed_unit_json;
@@ -67,8 +67,8 @@ let current_window;
 
 let percentage_modifier = 0.3;
 
-encoded_json_one_units = document.getElementById("encjson");
-decoded_unit_json = atob(encoded_json_one_units.innerHTML);
+encoded_json_one = document.getElementById("encjson");
+decoded_unit_json = atob(encoded_json_one.innerHTML);
 
 parsed_unit_json = JSON.parse(decoded_unit_json);
 split_parsed_unit_data = Object.values(parsed_unit_json);
@@ -171,23 +171,29 @@ function toggleTheme() {
 }
 
 function toggleGame() {
+    info_unit_names = [];
+    info_unit_tier = [];
+    info_unit_power = [];
+    info_unit_defense_status = [];
+
     switch(selected_game) {
         case 0:
             game_switcher.textContent = "WAR Mode ⚔️";
-            //let encoded_json_war = document.getElementById("encjson2");
-            //decoded_json = atob(encoded_json_one.innerHTML);
+            let encoded_json_war = document.getElementById("encjson2");
+            decoded_unit_json = atob(encoded_json_war.innerHTML);
             selected_game = 1;
             break;
         case 1:
             game_switcher.textContent = "GXK Mode 🦖";
-            //let encoded_json_gxk = document.getElementById("encjson3");
-            //decoded_json = atob(encoded_json_one.innerHTML);
+            let encoded_json_gxk = document.getElementById("encjson3");
+            decoded_unit_json = atob(encoded_json_gxk.innerHTML);
             selected_game = 2;
             break;
         case 2:
         default:
             game_switcher.textContent = "ONE Mode 🛸";
-            //decoded_json = atob(encoded_json_one.innerHTML);
+            encoded_json_one = document.getElementById("encjson");
+            decoded_unit_json = atob(encoded_json_one.innerHTML);
             selected_game = 0;
             break;
     }
@@ -234,10 +240,13 @@ function showWindowPopup(window, error_code = -1) {
 
         switch(error_code) {
             case 0:
-                error_message_content.innerHTML = "Example error message, should not show up during runtime<br><br>Send me a message if you see this, along with what you did";
+                error_message_content.innerHTML = "<b>Example error message</b><br<br>This should not show up during runtime<br><br>Send me a message if you see this, along with what you did";
                 break;
             case 1:
-                error_message_content.innerHTML = "Negative perma-losses - likely caused by too many hospital units<br><br>Make sure you have copied both logs correctly";
+                error_message_content.innerHTML = "<b>Negative perma-losses</b><br><br>Likely cause: too many hospital units - try re-copying logs";
+                break;
+            case 2:
+                error_message_content.innerHTML = "<b>Empty input or incorrect formatting</b>";
                 break;
         }
     }
@@ -373,6 +382,13 @@ function processData() {
     }
 
     if (!auto_bypass_errors_enabled) {
+        if (dead_unit_total == 0) {
+            showWindowPopup(error_message, 2);
+            return;
+        }
+    }
+
+    if (!auto_bypass_errors_enabled) {
         if (perma_unit_total < 0 || units_are_invalid) {
             showWindowPopup(error_message, 1);
             return;
@@ -380,14 +396,16 @@ function processData() {
     }
 
     if (auto_bypass_errors_enabled) {
-        output_text += "[ERRORS BYPASSED - THESE RESULTS ARE VERY LIKELY INACCURATE]\n\n";
+        output_text += "[ERRORS BYPASSED - THESE RESULTS ARE VERY LIKELY BROKEN OR INACCURATE]\n\n";
     }
 
     output_text += "Dead Units -- " + dead_unit_total.toLocaleString("en-US") +  ":\n\n";
     output_text += createUnitList(dead_unit_types, dead_unit_losses, 1, option_status, dead_attached_ids);
 
-    output_text += "\nHospital Units -- " + hospital_unit_total.toLocaleString("en-US") + ":\n\n";
-    output_text += createUnitList(hospital_unit_types, hospital_unit_losses, 1, option_status, hospital_attached_ids);
+    if (hospital_unit_total > 0) {
+        output_text += "\nHospital Units -- " + hospital_unit_total.toLocaleString("en-US") + ":\n\n";
+        output_text += createUnitList(hospital_unit_types, hospital_unit_losses, 1, option_status, hospital_attached_ids);
+    }
 
     if (perma_unit_total > 0) {
         output_text += "\nPermanent Losses -- " + perma_unit_total.toLocaleString("en-US") + ":\n\n";
@@ -632,7 +650,7 @@ function createUnitList(types, losses, multiply_modifier, display_status, info_i
     }
 
     if (display_status == 1 && perma) {
-        text +="\nTotal Power Lost: " + total_combined_power.toLocaleString("en-US") + "\n";
+        text +="\nEstimated Power Lost: " + total_combined_power.toLocaleString("en-US") + "\n";
     }
 
     return text;
