@@ -246,7 +246,7 @@ function showWindowPopup(window, error_code = -1) {
                 error_message_content.innerHTML = "<b>Negative perma-losses</b><br><br>Likely cause: too many hospital units - try re-copying logs";
                 break;
             case 2:
-                error_message_content.innerHTML = "<b>Empty input or incorrect formatting</b>";
+                error_message_content.innerHTML = "<b>Empty output or incorrect formatting</b><br><br>Try enabling 'Also Show Defences' if there were only defence units killed";
                 break;
         }
     }
