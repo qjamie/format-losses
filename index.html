@@ -12,13 +12,14 @@
         <h1>Format Losses</h1>
         <a id="theme-switcher" class="small-ribbon-button disable-on-popup">Website Theme: 🌙</a>
         <a id="advanced-options" class="small-ribbon-button disable-on-popup">Advanced Options ⚙️</a>
+        <a id="custom-parameters" class="small-ribbon-button disable-on-popup">Custom Parameters ⛓️</a>
 
         <div id="overlay" class="popup">
             <h3>Copied to Clipboard</h3>
         </div>
 
         <div id="error-message" class="popup">
-            <h3 id="error-code">Error Code 0</h3>
+            <h3 class="error-popup-header" id="error-code">Error Code 0</h3>
             <div>
                 <p id="error-message-content">
                     This is an example error message, and should not show up during runtime 
@@ -38,14 +39,25 @@
         </div>
         
         <div id="advanced-options-window" class="popup">
-            <div class="div-center">
-                <h3>Advanced Options</h3>
-            </div>
-            <input id="show-unit-properties" title="Shows unit power and tier. May slow down processing. Default: OFF" type="checkbox">Show Unit Properties</input>
+            <h3 class="popup-header">Advanced Options</h3>
+            <h4>Output Data</h4>
+            <input id="show-unit-properties" title="Shows unit power and tier. May slow down processing. Default: OFF" type="checkbox">
+            <label for="show-unit-properties">Unit Properties</label>
+            </input>
             <br>
-            <input id="show-defences" title="Allows defences to be shown on the note as valid losses. Default: OFF" type="checkbox">Also Show Defences</input>
+            <input id="show-defences" title="Allows defences to be shown on the note as valid losses. Default: OFF" type="checkbox">
+            <label for="show-defences">Also Show Defences</label>
+            </input>
             <br>
-            <input id="auto-bypass-errors" title="Bypasses all error messages automatically. Can be used to find missed logs - otherwise, not recommended. Default: OFF" type="checkbox">Auto-Bypass Errors</input>
+            <h4>Processing</h4>
+            <input id="enable-custom-parameters" title="Bypasses all error messages automatically. Can be used to find missed logs - otherwise, not recommended. Default: OFF" type="checkbox">
+            <label for="enable-custom-parameters">Custom Parameters</label> 
+            </input>
+            <br>
+            <h4>Error Handling</h4>
+            <input id="auto-bypass-errors" title="Bypasses all error messages automatically. Can be used to find missed logs - otherwise, not recommended. Default: OFF" type="checkbox">
+            <label for="auto-bypass-errors">Errors</label>
+            </input>
             <br>
             </input>
             <br>
@@ -56,7 +68,7 @@
         </div>
 
         <div id="hospital-capacity-window" class="popup">
-            <h3>Adjust Hospital Capacity</h3>
+            <h3 class="popup-header">Adjust Hospital Capacity</h3>
             <h6>Increments in steps of 100,000</h6>
             <input id="new-hospital-capacity" title="Changes the hospital capcity used in calculation. Default: 300,000" type="number" value="300000" maxlength="7" step="100000"/>
             <br>
@@ -65,10 +77,9 @@
             </div>
             <br>
         </div>
-        
 
         <div id="return-percentage-window" class="popup">
-            <h3>Adjust Return Percentage</h3>
+            <h3 class="popup-header">Adjust Return Percentage</h3>
             <h6>Increments in steps of 5%</h6>
             <input style="width: 30%;" id="new-return-percentage" title="Changes the percentage of units to return in calculation. Default: 30%" type="number" value="30" maxlength="3" max="100" min="5" step="5"/>
             <br>
@@ -79,7 +90,7 @@
         </div>
         
         <div id="list-order-window" class="popup">
-            <h3>Set List Order</h3>
+            <h3 class="popup-header">Set List Order</h3>
             <h6>Select from dropdown</h6>
             <select id="order-dropdown" title="Determines the order that units will be outputted in. Default: Alphabetic" checked>
                 <option value="alphabetic">Alphabetic</option>
@@ -92,6 +103,43 @@
             </div>
             <br>
         </div>
+
+        <div id="custom-parameter-window" class="popup">
+            <h3 class="popup-header">Adjust Custom Parameters</h3>
+            <h4>Presets</h4>
+            <select id="parameter-presets" title="Some pre-defined parameter preset for different use cases. Default: Dead Unit" checked>
+                <option value="dead-unit-preset">Dead Unit</option>
+                <option value="account-list-preset">Account List</option>
+                <option value="unit-discard-preset">Unit Discard</option>
+            </select>
+            <h4>Customise</h4>
+            <div id="custom-parameter-input">
+                <div>
+                    <label for="customise-extract-start">extract_start:</label>
+                    <br>
+                    <input id="customise-extract-start" type="text" value="DEAD UNIT" title="Start of where text will be extracted from. In log entries, this usually ends up being the first dropdown type. Default: 'DEAD UNIT'"></input>
+                    <br>
+                    <label for="customise-extract-end">extract_end:</label>
+                    <br>
+                    <input id="customise-extract-end" type="text" value="died"  title="End of where text will be extracted from, which can usually be found towards the end of a log entry. Default: 'died'"></input>
+                </div>
+                <div>
+                    <label for="customise-quantity-separator">quantity_separator:</label>
+                    <br>
+                    <input id="customise-quantity-separator" type="text" value=" x " title="Symbol or other string that will separate types from quantities; followed and preceded by a space. Default: ' x '"></input>
+                    <br>
+                    <label for="customise-line-terminator">line_terminator:</label>
+                    <br>
+                    <input id="customise-line-terminator" type="text" value="--END" title="String that adds itself to the end of a line for subsequent processing. Changing may severely break functionality. Default: '--END'"></input>
+                </div>
+            </div>
+            <br>
+            <div>
+                <a id="set-new-parameters" class="close-popup">Confirm Parameter Adjustment</a>
+            </div>
+            <br>
+        </div>
+
     </header>
     
     <main>

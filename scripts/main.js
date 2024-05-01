@@ -36,6 +36,8 @@ let game_switcher = document.getElementById("game-switcher");
 let error_message = document.getElementById("error-message");
 let error_code_text = document.getElementById("error-code");
 let error_message_content = document.getElementById("error-message-content");
+let custom_parameters = document.getElementById("custom-parameters");
+let custom_parameter_window = document.getElementById("custom-parameter-window");
 
 const close_buttons = document.querySelectorAll(".close-popup");
 const buttons_behind_popup = document.querySelectorAll(".disable-on-popup");
@@ -95,6 +97,7 @@ show_defences.addEventListener('click', toggleShowDefences);
 auto_bypass_errors.addEventListener('click', toggleAutoBypassErrors);
 enable_return_percentage.addEventListener('click', toggleReturnPercentage);
 game_switcher.addEventListener('click', toggleGame);
+custom_parameters.addEventListener('click', function() {showWindowPopup(custom_parameter_window)});
 
 function clearAllText() {
     dead_unit_input.value = "";
@@ -341,15 +344,20 @@ function processData() {
     let dead_unit_text = dead_unit_input.value;
     let hospital_unit_text = hospital_unit_input.value;
 
-    let line_terminator = "END";
-    let midpoint = " x ";
+    let extract_start = "DEAD UNIT";
+    let extract_end = "died";
+    let quantity_separator = " x ";
+    let line_terminator = "--END";
 
-    let dead_unit_data = extractRawText(dead_unit_text, "DEAD UNIT", "died", line_terminator);
-    let split_dead_unit_data = splitTextIntoData(dead_unit_data, midpoint, line_terminator);
+    let dead_unit_data = extractRawText(dead_unit_text, extract_start, extract_end, line_terminator);
+    let split_dead_unit_data = splitTextIntoData(dead_unit_data, quantity_separator, line_terminator);
     let combined_dead_unit_data = combineCommonUnitTypes(split_dead_unit_data);
 
-    let hospital_unit_data = extractRawText(hospital_unit_text, "HOSPITAL UNIT", "added", line_terminator);
-    let split_hospital_unit_data = splitTextIntoData(hospital_unit_data, midpoint, line_terminator);
+    let extract_start_hospital = "HOSPITAL UNIT";
+    let extract_end_hospital = "added";
+
+    let hospital_unit_data = extractRawText(hospital_unit_text, extract_start_hospital, extract_end_hospital, line_terminator);
+    let split_hospital_unit_data = splitTextIntoData(hospital_unit_data, quantity_separator, line_terminator);
     let combined_hospital_unit_data = combineCommonUnitTypes(split_hospital_unit_data);
 
     let dead_units_sorted = sortUnitData(combined_dead_unit_data);
@@ -454,7 +462,7 @@ function extractRawText(targetText, startingText, endingText, terminator) {
     return substring_text.replaceAll(",", "");
 }
 
-function splitTextIntoData(targetText, midpoint, terminator) {
+function splitTextIntoData(targetText, quantity_separator, terminator) {
     let target_text = targetText;
     let last_terminator_occurrence = targetText.lastIndexOf(terminator);
     let split_counter = 0;
@@ -474,12 +482,12 @@ function splitTextIntoData(targetText, midpoint, terminator) {
             left_split_start = split_counter + (terminator.length + 1);
         }
 
-        let next_midpoint_occurrence = target_text.indexOf(midpoint, split_counter);
+        let next_midpoint_occurrence = target_text.indexOf(quantity_separator, split_counter);
         let next_terminator_occurrence = target_text.indexOf(terminator, split_counter + 1);
 
         left_split_end = next_midpoint_occurrence;
 
-        right_split_start = next_midpoint_occurrence + midpoint.length;
+        right_split_start = next_midpoint_occurrence + quantity_separator.length;
         right_split_end = next_terminator_occurrence;
 
         split_counter = next_terminator_occurrence;

@@ -82,8 +82,8 @@ input {
     color: var(--button-highlight);
 }
 
-input[type="number"], select {
-    border-radius: 10px;
+input[type="number"], input[type="text"], select {
+    border-radius: 2.5px;
     border: solid 1px var(--button-highlight);
     padding: 4px;
     padding-left: 8px;
@@ -93,19 +93,27 @@ input[type="number"], select {
     color: var(--button-highlight);
 }
 
-#input-area, #output-area {
+input[type="text"] {
+    text-align: left !important;
+}
+
+#input-area, #output-area, #custom-parameter-input {
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-#overlay, #advanced-options-window, #hospital-capacity-window, #return-percentage-window, #list-order-window, #error-message, .gs-hidden {
+#overlay, #advanced-options-window, #hospital-capacity-window, #return-percentage-window, #list-order-window, #error-message, #custom-parameter-window, .gs-hidden {
     opacity: 0;
     display: none;
 }
 
-#error-code, .red-error {
+#error-code {
+    color: var(--button-bg);
+}
+
+.red-error {
     color: #ff6262;
     border-color: #ff6262;
 }
@@ -154,6 +162,17 @@ input[type="number"], select {
     border-radius: 5px;
     margin: 0 auto;
     margin-bottom: 25px;
+}
+
+.error-popup-header {
+    background-color: #ff6262 !important;
+}
+
+.popup-header, .error-popup-header {
+    padding: 5px;
+    color: var(--body-bg);
+    background-color: var(--button-highlight);
+    border-radius: 2.5px;
 }
 
 .div-center {
