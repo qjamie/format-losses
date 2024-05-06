@@ -160,13 +160,13 @@ for (let i = 0; i < close_buttons.length; i++) {
 function toggleTheme() {
     switch(is_dark_theme) {
         case true:
-            theme_switcher.textContent = "Website Theme: ☀️";
+            theme_switcher.textContent = "Theming: Light ☀️";
             is_dark_theme = false;
             changeThemeLight();
             break;
         case false:
         default:
-            theme_switcher.textContent = "Website Theme: 🌙";
+            theme_switcher.textContent = "Theming: Dark 🌙";
             is_dark_theme = true;
             changeThemeDark();
             break;
