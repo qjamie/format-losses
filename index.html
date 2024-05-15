@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formatter Tool 1.1</title>
+    <title>Log Formatter - Version 1.1</title>
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
 </head>
 <body>
     
     <header>
-        <h1>Formatter Tool 1.1</h1>
+        <h1>Log Formatter <span class="version-number">v1.1</span></h1>
         <a id="theme-switcher" class="small-ribbon-button disable-on-popup">Theming: Dark 🌙</a>
         <a id="advanced-options" class="small-ribbon-button disable-on-popup">Options ⚙️</a>
         <a id="custom-parameters" class="small-ribbon-button disable-on-popup">Parameters ⛓️</a>
@@ -18,8 +18,8 @@
             <h3>Copied to Clipboard</h3>
         </div>
 
-        <div id="error-message" class="popup">
-            <h3 class="error-popup-header" id="error-code">Error Code 0</h3>
+        <div id="error-message" class="popup popup-window">
+            <h3 class="error-popup-header" id="error-code">Error Code 0 ⚠</h3>
             <div>
                 <p id="error-message-content">
                     This is an example error message, and should not show up during runtime 
@@ -38,8 +38,8 @@
             <br>
         </div>
         
-        <div id="advanced-options-window" class="popup">
-            <h3 class="popup-header">Options</h3>
+        <div id="advanced-options-window" class="popup popup-window">
+            <h3 class="popup-header">Options Menu ⚙</h3>
             <h4>――― Output Data ―――</h4>
             <div class="div-left">
                 <input id="show-unit-properties" title="Shows unit power and tier. May slow down processing. Default: OFF" type="checkbox">
@@ -47,7 +47,7 @@
                 </input>
                 <br>
                 <input id="show-defences" title="Allows defences to be shown on the note as valid losses. Default: OFF" type="checkbox">
-                <label for="show-defences">Also Show Defences</label>
+                <label for="show-defences">Show Defences</label>
                 </input>
             </div>
             <h4>――― Advanced ―――</h4>
@@ -70,29 +70,29 @@
             <br>
         </div>
 
-        <div id="hospital-capacity-window" class="popup">
+        <div id="hospital-capacity-window" class="popup popup-window">
             <h3 class="popup-header">Adjust Hospital Capacity</h3>
             <h6>Increments in steps of 100,000</h6>
             <input id="new-hospital-capacity" title="Changes the hospital capcity used in calculation. Default: 300,000" type="number" value="300000" maxlength="7" step="100000"/>
             <br>
             <div>
-            <a id="set-hospital-capacity-adjustment" class="close-popup">Set Adjustment</a>
+                <a id="set-hospital-capacity-adjustment" class="close-popup">Set Adjustment</a>
             </div>
             <br>
         </div>
 
-        <div id="return-percentage-window" class="popup">
-            <h3 class="popup-header">Adjust Return Percentage</h3>
+        <div id="return-percentage-window" class="popup popup-window">
+            <h3 class="popup-header">Return Percentage (％)</h3>
             <h6>Increments in steps of 5%</h6>
             <input style="width: 30%;" id="new-return-percentage" title="Changes the percentage of units to return in calculation. Default: 30%" type="number" value="30" maxlength="3" max="100" min="5" step="5"/>
             <br>
             <div>
-            <a id="set-return-percentage-adjustment" class="close-popup">Set Adjustment</a>
+                <a id="set-return-percentage-adjustment" class="close-popup">Set Adjustment</a>
             </div>
             <br>
         </div>
         
-        <div id="list-order-window" class="popup">
+        <div id="list-order-window" class="popup popup-window">
             <h3 class="popup-header">Set List Order</h3>
             <h6>Select from dropdown</h6>
             <select id="order-dropdown" title="Determines the order that units will be outputted in. Default: Alphabetic" checked>
@@ -107,8 +107,8 @@
             <br>
         </div>
 
-        <div id="custom-parameter-window" class="popup">
-            <h3 class="popup-header">Adjust Custom Parameters</h3>
+        <div id="custom-parameter-window" class="popup popup-window">
+            <h3 class="popup-header">Custom Parameters ⛓</h3>
             <h4>Presets</h4>
             <select id="parameter-presets" title="Some pre-defined parameter preset for different use cases. Default: Dead Unit" checked>
                 <option value="dead-unit-preset">Dead Unit</option>
@@ -136,8 +136,8 @@
                     <input id="customise-line-terminator" type="text" value="--END" title="String that adds itself to the end of a line for subsequent processing. Changing may severely break functionality. Default: '--END'"></input>
                 </div>
             </div>
-            <input id="show-defences" title="Totals up common quantities (eg. Dead Units). Turn off when generating a generic list with no calculations. Default: ON" type="checkbox" checked>
-                <label for="show-defences">Add Up Common Quantities</label>
+            <input id="combine-quantities" title="Totals up common quantities (eg. Dead Units). Turn off when generating a generic list with no calculations or numerical data. Default: ON" type="checkbox" checked>
+                <label for="combine-quantities">Calculate Common Quantities</label>
             </input>
             <br>
             <br>
@@ -158,7 +158,7 @@
         <h4>Processing Options</h4>
         <div>
             <!--<a id="hospital-capacity" class="small-ribbon-button disable-on-popup">Hospital Capacity: 300,000</a>-->
-            <a id="game-switcher" class="small-ribbon-button disable-on-popup gs-hidden">ONE Mode 🛸</a>
+            <a id="game-switcher" class="small-ribbon-button disable-on-popup gs-hidden">Game: ONE 🛸</a>
             <a id="enable-return-percentage" class="small-ribbon-button disable-on-popup">Return Perma-Losses: ❌</a>
             <a id="return-percentage" class="small-ribbon-button disable-on-popup rp-disabled">Return Percentage: 30%</a>
         </div>

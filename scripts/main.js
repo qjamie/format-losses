@@ -181,20 +181,20 @@ function toggleGame() {
 
     switch(selected_game) {
         case 0:
-            game_switcher.textContent = "WAR Mode ⚔️";
+            game_switcher.textContent = "Game: WAR ⚔️";
             let encoded_json_war = document.getElementById("encjson2");
             decoded_unit_json = atob(encoded_json_war.innerHTML);
             selected_game = 1;
             break;
         case 1:
-            game_switcher.textContent = "GXK Mode 🦖";
+            game_switcher.textContent = "Game: GXK 🦖";
             let encoded_json_gxk = document.getElementById("encjson3");
             decoded_unit_json = atob(encoded_json_gxk.innerHTML);
             selected_game = 2;
             break;
         case 2:
         default:
-            game_switcher.textContent = "ONE Mode 🛸";
+            game_switcher.textContent = "Game: ONE 🛸";
             encoded_json_one = document.getElementById("encjson");
             decoded_unit_json = atob(encoded_json_one.innerHTML);
             selected_game = 0;
@@ -239,7 +239,7 @@ function changeThemeDark() {
 
 function showWindowPopup(window, error_code = -1) {
     if (error_code > -1) {
-        error_code_text.textContent = "Error Code " + error_code;
+        error_code_text.textContent = "Error Code " + error_code + " ⚠";
 
         switch(error_code) {
             case 0:

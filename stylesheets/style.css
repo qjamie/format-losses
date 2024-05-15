@@ -104,7 +104,7 @@ input[type="text"] {
     justify-content: center;
 }
 
-#overlay, #advanced-options-window, #hospital-capacity-window, #return-percentage-window, #list-order-window, #error-message, #custom-parameter-window, .gs-hidden {
+.popup-window, .gs-hidden {
     opacity: 0;
     display: none;
 }
@@ -163,11 +163,17 @@ input[type="text"] {
     background-color: #ff6262 !important;
 }
 
-.popup-header, .error-popup-header {
+.version-number, .popup-header, .error-popup-header {
     padding: 5px;
     color: var(--body-bg);
     background-color: var(--button-highlight);
     border-radius: 2.5px;
+}
+
+.version-number {
+    padding-top: 2.5px;
+    padding-bottom: 2.5px;
+    margin: 0 auto;
 }
 
 .div-center {
