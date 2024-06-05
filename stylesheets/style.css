@@ -58,8 +58,12 @@ textarea.input {
     overflow-y: scroll;
 }
 
-textarea.output {
-    resize: vertical;
+div.settings {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background-color: var(--button-bg);
+    text-align: center;
+    height: 100%;
 }
 
 textarea, hr {
@@ -93,7 +97,7 @@ input[type="number"], input[type="text"], select {
     color: var(--button-highlight);
 }
 
-input[type="text"] {
+input[type="text"], select {
     text-align: left !important;
 }
 
@@ -102,6 +106,27 @@ input[type="text"] {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+#dead-units {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: solid 3px var(--button-hover);
+}
+
+#hospital-units {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: solid 3px var(--button-hover);
+}
+
+#input-area > textarea {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+#process {
+    font-weight: bold;
 }
 
 .popup-window, .gs-hidden {
@@ -113,7 +138,33 @@ input[type="text"] {
     color: var(--button-bg);
 }
 
-.red-error {
+.sidebar-section {
+    padding: 5px;
+    color: var(--body-bg);
+    background-color: var(--body-bg);
+    border-radius: 2.5px;
+    font-size: 15px;
+}
+
+.sidebar {
+    margin: 0;
+    padding: 0;
+    left: 0;
+    top: 0;
+    width: 300px;
+    background-color: var(--textarea-bg);
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+    border-radius: 5px;
+}
+
+.s-off {
+    margin: 0;
+    font-style: italic;
+}
+
+.red-error, .s-off {
     color: #ff6262;
     border-color: #ff6262;
 }
@@ -145,6 +196,19 @@ input[type="text"] {
     transition: 0.2s;
 }
 
+.pop-up-message {
+    border: solid 1px var(--button-highlight);
+    text-align: center;
+    opacity: 0;
+    bottom: 15px;
+    background-color: var(--textarea-bg);
+    transition: 0.2s;
+    padding: 8px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 10px;
+}
+
 .options-toggle {
     display: none;
 }
@@ -168,6 +232,7 @@ input[type="text"] {
     color: var(--body-bg);
     background-color: var(--button-highlight);
     border-radius: 2.5px;
+    font-size: 15px;
 }
 
 .version-number {
@@ -193,6 +258,10 @@ input[type="text"] {
     color: grey;
     border-color: grey;
     pointer-events: none;
+}
+
+.as-text {
+    background-color: var(--button-hover);
 }
 
 ::-webkit-scrollbar {

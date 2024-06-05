@@ -3,19 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log Formatter - Version 1.1</title>
+    <title>Log Formatter 1.1</title>
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
 </head>
 <body>
     
     <header>
-        <h1>Log Formatter <span class="version-number">v1.1</span></h1>
-        <a id="theme-switcher" class="small-ribbon-button disable-on-popup">Theming: Dark 🌙</a>
-        <a id="advanced-options" class="small-ribbon-button disable-on-popup">Options ⚙️</a>
-        <a id="custom-parameters" class="small-ribbon-button disable-on-popup">Parameters ⛓️</a>
-
-        <div id="overlay" class="popup">
-            <h3>Copied to Clipboard</h3>
+        <div class="sidebar">
+            <h1>Log Formatter <span class="version-number">r1.1</span></h1>
+            <a id="theme-switcher" class="small-ribbon-button disable-on-popup">Theme: Dark 🌙</a>
+            <a id="advanced-options" class="small-ribbon-button disable-on-popup">Options ⚙️</a>
+            <a id="custom-parameters" class="small-ribbon-button disable-on-popup">Parameters ⛓️</a>
+            <div class="sidebar-section">
+                <h3 class="popup-header">Current Options</h3>
+                <div class="div-left">
+                    <p class="s-off">- Unit Properties not Shown</p>
+                    <p class="s-off">- Defences not Shown</p>
+                    <p class="s-off">- No Custom Parameters</p>
+                    <p class="s-off">- Errors will not Bypass</p>
+                </div>
+                <br>
+                <div class="div-center">
+                    <a class="disable-on-popup">Reset to Default</a>
+                </div>
+                <br>
+            </div>
+            <div class="sidebar-section">
+                <h3 class="popup-header">Action History</h3>
+                <textarea class="output disable-on-popup" id="action-history" style="width: 85%;" rows="20" placeholder="Complete actions will show here..." readonly></textarea>
+                <br>
+                <div class="div-center">
+                    <a class="disable-on-popup">Clear Actions</a>
+                </div>
+                <br>
+            </div>
+            <h3 class="popup-header">Most Recent Action</h3>
+            <div id="overlay" class="pop-up-message">
+                Copied to Clipboard
+            </div>
         </div>
 
         <div id="error-message" class="popup popup-window">
@@ -112,7 +137,6 @@
             <h4>Presets</h4>
             <select id="parameter-presets" title="Some pre-defined parameter preset for different use cases. Default: Dead Unit" checked>
                 <option value="dead-unit-preset">Dead Unit</option>
-                <option value="account-list-preset">Account List</option>
                 <option value="unit-discard-preset">Unit Discard</option>
             </select>
             <h4>Customise</h4>
@@ -151,24 +175,17 @@
     
     <main>
         <div id="input-area">
-            <textarea class="input disable-on-popup" id="dead-units" rows="19" cols="52" placeholder="Enter Dead Unit logs... ⤵️"></textarea>
-            <textarea class="input disable-on-popup" id="hospital-units" rows="19" cols="52" placeholder="Enter Hospital Unit logs... ⤵️"></textarea>
+            <textarea class="input disable-on-popup" id="dead-units" rows="23" cols="53" placeholder="Enter Dead Unit logs... ⤵️"></textarea>
+            <textarea class="input disable-on-popup" id="hospital-units" rows="23" cols="53" placeholder="Enter Hospital Unit logs... ⤵️"></textarea>
             <!--<textarea class="input disable-on-popup" id="hospital-units" rows="19" cols="52" placeholder="Enter Current Hospital Units... ⤵️"></textarea>-->
-        </div>
-        <h4>Processing Options</h4>
-        <div>
-            <!--<a id="hospital-capacity" class="small-ribbon-button disable-on-popup">Hospital Capacity: 300,000</a>-->
-            <a id="game-switcher" class="small-ribbon-button disable-on-popup gs-hidden">Game: ONE 🛸</a>
-            <a id="enable-return-percentage" class="small-ribbon-button disable-on-popup">Return Perma-Losses: ❌</a>
-            <a id="return-percentage" class="small-ribbon-button disable-on-popup rp-disabled">Return Percentage: 30%</a>
-        </div>
-        <!--<a id="list-order" class="small-ribbon-button disable-on-popup">Output Order: Alphabetic</a>-->
-        <div id="output-area">
-            <textarea class="output disable-on-popup" id="output" rows="19" cols="112" placeholder="Awaiting output..." readonly></textarea>
         </div>
         <a class="disable-on-popup" id="process">Convert 🛠️</a>
         <a class="disable-on-popup" id="copy-output">Copy Output 📄</a>
         <a class="disable-on-popup" id="clear-textboxes">Clear 💥</a>
+        <!--<a id="list-order" class="small-ribbon-button disable-on-popup">Output Order: Alphabetic</a>-->
+        <div id="output-area">
+            <textarea class="output disable-on-popup" id="output" rows="23" cols="112" placeholder="Awaiting output..." readonly></textarea>
+        </div>
     </div>
     </main>
 
