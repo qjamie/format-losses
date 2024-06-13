@@ -10,34 +10,66 @@
     
     <header>
         <div class="sidebar">
-            <h1>Log Formatter <span class="version-number">r1.1</span></h1>
+            <h1>Log Formatter</h1>
             <a id="theme-switcher" class="small-ribbon-button disable-on-popup">Theme: Dark 🌙</a>
-            <a id="advanced-options" class="small-ribbon-button disable-on-popup">Options ⚙️</a>
+            <!--<a id="advanced-options" class="small-ribbon-button disable-on-popup">Options ⚙️</a>-->
             <a id="custom-parameters" class="small-ribbon-button disable-on-popup">Parameters ⛓️</a>
             <div class="sidebar-section">
-                <h3 class="popup-header">Current Options</h3>
+                <h3 class="popup-header">Processing Options</h3>
                 <div class="div-left">
-                    <p class="s-off">- Unit Properties not Shown</p>
-                    <p class="s-off">- Defences not Shown</p>
-                    <p class="s-off">- No Custom Parameters</p>
-                    <p class="s-off">- Errors will not Bypass</p>
+                    <div class="option-box">
+                        <a id="toggle-unit-properties" class="small-ribbon-button toggle-button disable-on-popup">Enable</a>
+                        <p class="s-off">Return Units</p>
+                    </div>
+                    <div class="option-box">
+                        <input style="margin: 0 10px 0 0" type="text" size="6" />
+                        <p class="s-off">Return Percentage</p>
+                    </div>
+                    <div class="option-box">
+                        <input style="margin: 0 10px 0 0" type="text" size="6" />
+                        <p class="s-off">Hospital Capacity</p>
+                    </div>
                 </div>
                 <br>
                 <div class="div-center">
-                    <a class="disable-on-popup">Reset to Default</a>
+                    <a class="disable-on-popup">Reset Processing Options</a>
                 </div>
                 <br>
             </div>
             <div class="sidebar-section">
-                <h3 class="popup-header">Action History</h3>
-                <textarea class="output disable-on-popup" id="action-history" style="width: 85%;" rows="20" placeholder="Complete actions will show here..." readonly></textarea>
+                <h3 class="popup-header">Output Options</h3>
+                <div class="div-left">
+                    <div class="option-box">
+                        <a id="toggle-unit-properties" class="small-ribbon-button toggle-button disable-on-popup">+</a>
+                        <p class="s-off">Show Unit Properties</p>
+                    </div>
+                    <div class="option-box">
+                        <a id="toggle-defences" class="small-ribbon-button toggle-button disable-on-popup">+</a>
+                        <p class="s-off">Show Defences</p>
+                    </div>
+                    <div class="option-box">
+                        <a id="toggle-parameters" class="small-ribbon-button toggle-button disable-on-popup">+</a>
+                        <p class="s-off">Custom Parameters</p>
+                    </div>
+                    <div class="option-box">
+                        <a id="toggle-error-bypass" class="small-ribbon-button toggle-button disable-on-popup">+</a>
+                        <p class="s-off">Bypass Errors</p>
+                    </div>
+                    <div class="option-box">
+                        <select id="order-dropdown" style="margin: 0 10px 0 0" title="Determines the order that units will be outputted in. Default: Alphabetic" checked>
+                            <option value="alphabetic">Alphabetic</option>
+                            <option value="unit-tier">Unit Tier</option>
+                            <option value="prioritise-offence">Attackers First</option>
+                        </select>
+                        <p class="s-off">List Order</p>
+                    </div>
+                </div>
                 <br>
                 <div class="div-center">
-                    <a class="disable-on-popup">Clear Actions</a>
+                    <a class="disable-on-popup">Reset Output Options</a>
                 </div>
                 <br>
             </div>
-            <h3 class="popup-header">Most Recent Action</h3>
             <div id="overlay" class="pop-up-message">
                 Copied to Clipboard
             </div>
@@ -175,17 +207,26 @@
     
     <main>
         <div id="input-area">
-            <textarea class="input disable-on-popup" id="dead-units" rows="23" cols="53" placeholder="Enter Dead Unit logs... ⤵️"></textarea>
-            <textarea class="input disable-on-popup" id="hospital-units" rows="23" cols="53" placeholder="Enter Hospital Unit logs... ⤵️"></textarea>
+            <textarea class="input disable-on-popup" id="dead-units" rows="23" cols="45" placeholder="Enter Dead Unit logs... ⤵️"></textarea>
+            <textarea class="input disable-on-popup" id="hospital-units" rows="23" cols="45" placeholder="Enter Hospital Unit logs... ⤵️"></textarea>
+            <textarea class="input disable-on-popup" id="current-hospital" rows="23" cols="45" placeholder="Enter Current Hospital Units... ⤵️"></textarea>
             <!--<textarea class="input disable-on-popup" id="hospital-units" rows="19" cols="52" placeholder="Enter Current Hospital Units... ⤵️"></textarea>-->
         </div>
-        <a class="disable-on-popup" id="process">Convert 🛠️</a>
-        <a class="disable-on-popup" id="copy-output">Copy Output 📄</a>
-        <a class="disable-on-popup" id="clear-textboxes">Clear 💥</a>
+        <br>
+        <div class="div-center">
+            <a class="disable-on-popup important-button" id="process">Convert 🛠️</a>
+            <a class="disable-on-popup important-button" id="game-switcher">Game: ONE 🛸</a>
+        </div>
+        <br>
         <!--<a id="list-order" class="small-ribbon-button disable-on-popup">Output Order: Alphabetic</a>-->
         <div id="output-area">
-            <textarea class="output disable-on-popup" id="output" rows="23" cols="112" placeholder="Awaiting output..." readonly></textarea>
+            <textarea class="output disable-on-popup" id="output" rows="23" cols="150" placeholder="Awaiting output..." readonly></textarea>
         </div>
+        <br>
+        <div class="div-center ">
+            <a class="disable-on-popup" id="copy-output">Copy Text 📄</a>
+            <a class="disable-on-popup" id="clear-textboxes">Clear All 💥</a>
+        </div>  
     </div>
     </main>
 
