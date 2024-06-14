@@ -18,12 +18,16 @@
                 <h3 class="popup-header">Processing Options</h3>
                 <div class="div-left">
                     <div class="option-box">
-                        <a id="toggle-unit-properties" class="small-ribbon-button toggle-button disable-on-popup">Enable</a>
+                        <a id="return-units" class="small-ribbon-button toggle-button disable-on-popup">+</a>
                         <p class="s-off">Return Units</p>
                     </div>
                     <div class="option-box">
-                        <input style="margin: 0 10px 0 0" type="text" size="6" />
-                        <p class="s-off">Return Percentage</p>
+                        <a id="toggle-parameters" class="small-ribbon-button toggle-button disable-on-popup">+</a>
+                        <p class="s-off">Custom Parameters</p>
+                    </div>
+                    <div class="option-box">
+                        <input style="margin: 0 10px 0 0" type="text" size="6" disabled />
+                        <p class="s-off disabled-text">Return Percentage</p>
                     </div>
                     <div class="option-box">
                         <input style="margin: 0 10px 0 0" type="text" size="6" />
@@ -48,12 +52,16 @@
                         <p class="s-off">Show Defences</p>
                     </div>
                     <div class="option-box">
-                        <a id="toggle-parameters" class="small-ribbon-button toggle-button disable-on-popup">+</a>
-                        <p class="s-off">Custom Parameters</p>
-                    </div>
-                    <div class="option-box">
                         <a id="toggle-error-bypass" class="small-ribbon-button toggle-button disable-on-popup">+</a>
                         <p class="s-off">Bypass Errors</p>
+                    </div>
+                    <div class="option-box">
+                        <select id="game-switcher" style="margin: 0 10px 0 0" title="Chooses which game to pull data from for unit information. Default: ONE" checked disabled>
+                            <option value="alphabetic">ONE</option>
+                            <option value="unit-tier">WAR</option>
+                            <option value="prioritise-offence">GXK</option>
+                        </select>
+                        <p class="s-off gs-disabled">Selected Game</p>
                     </div>
                     <div class="option-box">
                         <select id="order-dropdown" style="margin: 0 10px 0 0" title="Determines the order that units will be outputted in. Default: Alphabetic" checked>
@@ -127,43 +135,6 @@
             <br>
         </div>
 
-        <div id="hospital-capacity-window" class="popup popup-window">
-            <h3 class="popup-header">Adjust Hospital Capacity</h3>
-            <h6>Increments in steps of 100,000</h6>
-            <input id="new-hospital-capacity" title="Changes the hospital capcity used in calculation. Default: 300,000" type="number" value="300000" maxlength="7" step="100000"/>
-            <br>
-            <div>
-                <a id="set-hospital-capacity-adjustment" class="close-popup">Set Adjustment</a>
-            </div>
-            <br>
-        </div>
-
-        <div id="return-percentage-window" class="popup popup-window">
-            <h3 class="popup-header">Return Percentage (％)</h3>
-            <h6>Increments in steps of 5%</h6>
-            <input style="width: 30%;" id="new-return-percentage" title="Changes the percentage of units to return in calculation. Default: 30%" type="number" value="30" maxlength="3" max="100" min="5" step="5"/>
-            <br>
-            <div>
-                <a id="set-return-percentage-adjustment" class="close-popup">Set Adjustment</a>
-            </div>
-            <br>
-        </div>
-        
-        <div id="list-order-window" class="popup popup-window">
-            <h3 class="popup-header">Set List Order</h3>
-            <h6>Select from dropdown</h6>
-            <select id="order-dropdown" title="Determines the order that units will be outputted in. Default: Alphabetic" checked>
-                <option value="alphabetic">Alphabetic</option>
-                <option value="unit-tier">Unit Tier</option>
-                <option value="prioritise-offence">Prioritise Offence</option>
-            </select>
-            <br>
-            <div>
-                <a id="set-new-list-order" class="close-popup">Confirm Options</a>
-            </div>
-            <br>
-        </div>
-
         <div id="custom-parameter-window" class="popup popup-window">
             <h3 class="popup-header">Custom Parameters ⛓</h3>
             <h4>Presets</h4>
@@ -207,23 +178,20 @@
     
     <main>
         <div id="input-area">
-            <textarea class="input disable-on-popup" id="dead-units" rows="23" cols="45" placeholder="Enter Dead Unit logs... ⤵️"></textarea>
-            <textarea class="input disable-on-popup" id="hospital-units" rows="23" cols="45" placeholder="Enter Hospital Unit logs... ⤵️"></textarea>
-            <textarea class="input disable-on-popup" id="current-hospital" rows="23" cols="45" placeholder="Enter Current Hospital Units... ⤵️"></textarea>
-            <!--<textarea class="input disable-on-popup" id="hospital-units" rows="19" cols="52" placeholder="Enter Current Hospital Units... ⤵️"></textarea>-->
+            <textarea class="input disable-on-popup" id="dead-units" rows="19" cols="45" placeholder="Enter Dead Unit logs... ⤵️"></textarea>
+            <textarea class="input disable-on-popup" id="hospital-units" rows="19" cols="45" placeholder="Enter Hospital Unit logs... ⤵️"></textarea>
+            <textarea class="input disable-on-popup" id="current-hospital" rows="19" cols="45" placeholder="Enter Current Hospital Units... ⤵️"></textarea>
         </div>
         <br>
         <div class="div-center">
-            <a class="disable-on-popup important-button" id="process">Convert 🛠️</a>
-            <a class="disable-on-popup important-button" id="game-switcher">Game: ONE 🛸</a>
+            <a class="disable-on-popup important-button" id="process">Convert to Note 🛠️</a>
         </div>
         <br>
-        <!--<a id="list-order" class="small-ribbon-button disable-on-popup">Output Order: Alphabetic</a>-->
         <div id="output-area">
-            <textarea class="output disable-on-popup" id="output" rows="23" cols="150" placeholder="Awaiting output..." readonly></textarea>
+            <textarea class="output disable-on-popup" id="output" rows="19" cols="150" placeholder="Awaiting output..." readonly></textarea>
         </div>
         <br>
-        <div class="div-center ">
+        <div class="div-center">
             <a class="disable-on-popup" id="copy-output">Copy Text 📄</a>
             <a class="disable-on-popup" id="clear-textboxes">Clear All 💥</a>
         </div>  

@@ -1,13 +1,3 @@
-/*
-future features
-
-let hospital_capacity = document.getElementById("hospital-capacity");
-let list_order = document.getElementById("list-order");
-
-hospital_capacity.addEventListener('click', function() {showWindowPopup(hospital_capacity_window)});
-list_order.addEventListener('click', function() {showWindowPopup(list_order_window)});
-*/
-
 let dead_unit_input = document.getElementById("dead-units");
 let hospital_unit_input = document.getElementById("hospital-units");
 let output_box = document.getElementById("output");
@@ -16,17 +6,6 @@ let options_box = document.getElementById("options");
 let percentage_textbox = document.getElementById("percentage-textbox");
 let copy_output = document.getElementById("copy-output");
 let copy_output_window = document.getElementById("overlay");
-let advanced_options = document.getElementById("advanced-options");
-let advanced_options_window = document.getElementById("advanced-options-window");
-let hospital_capacity_window = document.getElementById("hospital-capacity-window");
-let list_order_window = document.getElementById("list-order-window");
-let set_hospital_capacity_adjustment = document.getElementById("set-hospital-capacity-adjustment");
-let new_hospital_capacity = document.getElementById("new-hospital-capacity");
-let enable_return_percentage = document.getElementById("enable-return-percentage")
-let return_percentage = document.getElementById("return-percentage");
-let return_percentage_window = document.getElementById("return-percentage-window");
-let set_return_percentage_adjustment = document.getElementById("set-return-percentage-adjustment");
-let new_return_percentage = document.getElementById("new-return-percentage");
 let theme_switcher = document.getElementById("theme-switcher");
 let clear_textboxes = document.getElementById("clear-textboxes");
 let show_unit_properties = document.getElementById("show-unit-properties");
@@ -38,6 +17,10 @@ let error_code_text = document.getElementById("error-code");
 let error_message_content = document.getElementById("error-message-content");
 let custom_parameters = document.getElementById("custom-parameters");
 let custom_parameter_window = document.getElementById("custom-parameter-window");
+let toggle_unit_properties = document.getElementById("toggle-unit-properties");
+let toggle_defences = document.getElementById("toggle-defences");
+let toggle_parameters = document.getElementById("toggle-parameters");
+let toggle_error_bypass = document.getElementById("toggle-error-bypass");
 
 const close_buttons = document.querySelectorAll(".close-popup");
 const buttons_behind_popup = document.querySelectorAll(".disable-on-popup");
@@ -86,17 +69,12 @@ for (i = 0; i < split_parsed_unit_data[0].length; i++) {
 
 copy_output.addEventListener('click', copyToClipboard);
 process_button.addEventListener('click', processData);
-advanced_options.addEventListener('click', function() {showWindowPopup(advanced_options_window)});
-return_percentage.addEventListener('click', function() {showWindowPopup(return_percentage_window)});
 theme_switcher.addEventListener('click', toggleTheme);
-set_hospital_capacity_adjustment.addEventListener('click', updateHospitalCapacity);
-set_return_percentage_adjustment.addEventListener('click', updateReturnPercentage);
 clear_textboxes.addEventListener('click', clearAllText);
-show_unit_properties.addEventListener('click', toggleShowUnitProperties);
-show_defences.addEventListener('click', toggleShowDefences);
-auto_bypass_errors.addEventListener('click', toggleAutoBypassErrors);
-enable_return_percentage.addEventListener('click', toggleReturnPercentage);
-game_switcher.addEventListener('click', toggleGame);
+toggle_unit_properties.addEventListener('click', toggleShowUnitProperties);
+toggle_defences.addEventListener('click', toggleShowDefences);
+toggle_error_bypass.addEventListener('click', toggleAutoBypassErrors);
+game_switcher.addEventListener('change', function() {changeGame(game_switcher)});
 custom_parameters.addEventListener('click', function() {showWindowPopup(custom_parameter_window)});
 
 function clearAllText() {
@@ -105,41 +83,49 @@ function clearAllText() {
     output_box.value = "";
 }
 
-function toggleReturnPercentage() {
-    if (perma_to_be_returned) {
-        enable_return_percentage.textContent = "Return Perma-Losses: ❌";
-        perma_to_be_returned = false;
-        return_percentage.classList.add("rp-disabled");
-    } else {
-        enable_return_percentage.textContent = "Return Perma-Losses: ✅";
-        perma_to_be_returned = true;
-        return_percentage.classList.remove("rp-disabled");
-    }
-}
-
 function toggleShowUnitProperties() {
-    if (show_unit_properties.checked) {
+    if (!show_properties_enabled) {
         show_properties_enabled = true;
-        game_switcher.classList.remove("gs-hidden");
+        updateToggleButton(toggle_unit_properties, true);
+        game_switcher.disabled = false;
+        game_switcher.nextElementSibling.classList.remove("gs-disabled");
     } else {
         show_properties_enabled = false;
-        game_switcher.classList.add("gs-hidden");
+        updateToggleButton(toggle_unit_properties, false);
+        game_switcher.disabled = true;
+        game_switcher.nextElementSibling.classList.add("gs-disabled");
     }
 }
 
 function toggleShowDefences() {
-    if (show_defences.checked) {
+    if (!show_defences_enabled) {
         show_defences_enabled = true;
+        updateToggleButton(toggle_defences, true);
     } else {
         show_defences_enabled = false;
+        updateToggleButton(toggle_defences, false);
     }
 }
 
 function toggleAutoBypassErrors() {
-    if (auto_bypass_errors.checked) {
+    if (!auto_bypass_errors_enabled) {
         auto_bypass_errors_enabled = true;
+        updateToggleButton(toggle_error_bypass, true);
     } else {
         auto_bypass_errors_enabled = false;
+        updateToggleButton(toggle_error_bypass, false);
+    }
+}
+
+function updateToggleButton(button, is_enabled) {
+    if (is_enabled) {
+        button.classList.add("disable-toggle");
+        button.textContent = "–";
+        button.nextElementSibling.style.fontWeight = "bold";
+    } else {
+        button.classList.remove("disable-toggle");
+        button.textContent = "+";
+        button.nextElementSibling.style.fontWeight = "normal";
     }
 }
 
@@ -173,29 +159,26 @@ function toggleTheme() {
     }
 }
 
-function toggleGame() {
+function changeGame(game) {
     info_unit_names = [];
     info_unit_tier = [];
     info_unit_power = [];
     info_unit_defense_status = [];
 
-    switch(selected_game) {
+    switch(game.seletedIndex) {
         case 0:
-            game_switcher.textContent = "Game: WAR ⚔️";
-            let encoded_json_war = document.getElementById("encjson2");
+        default:
+            let encoded_json_war = document.getElementById("encjson");
             decoded_unit_json = atob(encoded_json_war.innerHTML);
             selected_game = 1;
             break;
         case 1:
-            game_switcher.textContent = "Game: GXK 🦖";
-            let encoded_json_gxk = document.getElementById("encjson3");
+            let encoded_json_gxk = document.getElementById("encjson2");
             decoded_unit_json = atob(encoded_json_gxk.innerHTML);
             selected_game = 2;
             break;
         case 2:
-        default:
-            game_switcher.textContent = "Game: ONE 🛸";
-            encoded_json_one = document.getElementById("encjson");
+            encoded_json_one = document.getElementById("encjson3");
             decoded_unit_json = atob(encoded_json_one.innerHTML);
             selected_game = 0;
             break;
@@ -221,6 +204,7 @@ function changeThemeLight() {
     css_root_element.style.setProperty('--textarea-bg', '#e8e8e8');
     css_root_element.style.setProperty('--scrollbar-thumb', '#c9c9c9');
     css_root_element.style.setProperty('--scrollbar-thumb-hover', '#adadad');
+    css_root_element.style.setProperty('--body-bg-top', 'white');
     css_root_element.style.setProperty('--body-bg', 'whitesmoke');
     css_root_element.style.setProperty('--button-hover', '#e8e8e8');
     css_root_element.style.setProperty('--button-active', '#c9c9c9');
@@ -232,7 +216,8 @@ function changeThemeDark() {
     css_root_element.style.setProperty('--textarea-bg', '#111111');
     css_root_element.style.setProperty('--scrollbar-thumb', '#323232');
     css_root_element.style.setProperty('--scrollbar-thumb-hover', '#404040');
-    css_root_element.style.setProperty('--body-bg', '#191919');
+    css_root_element.style.setProperty('--body-bg-top', '#202020');
+    css_root_element.style.setProperty('--body-bg', '#151515');
     css_root_element.style.setProperty('--button-hover', '#252525');
     css_root_element.style.setProperty('--button-active', '#505050');
 }

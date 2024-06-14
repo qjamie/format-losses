@@ -11,6 +11,7 @@
     --cursor: auto;
 
     --button-enable: #7eff64;
+    --button-disable: #ff6464;
 }
 
 * {
@@ -112,6 +113,10 @@ input[type="text"], select {
     text-align: left !important;
 }
 
+input:disabled, select:disabled {
+    border-color: grey;
+}
+
 #input-area, #output-area, #custom-parameter-input {
     text-align: center;
     display: flex;
@@ -131,6 +136,11 @@ input[type="text"], select {
 
 #error-code {
     color: var(--button-bg);
+}
+
+.gs-disabled {
+    color: grey !important;
+    text-decoration: line-through;
 }
 
 .sidebar-section {
@@ -169,6 +179,17 @@ input[type="text"], select {
     color: var(--body-bg);
     transition: 0.2s;
     cursor: pointer;
+}
+
+.disable-toggle {
+    color: var(--body-bg);
+    background-color: var(--button-highlight);
+    border-color: var(--button-highlight);
+}
+
+.disable-toggle:hover {
+    border-color: var(--button-disable);
+    background-color: var(--button-disable);
 }
 
 .s-off {
