@@ -11,7 +11,7 @@
     <header>
         <div class="sidebar">
             <h1>Log Formatter</h1>
-            <a id="theme-switcher" class="small-ribbon-button disable-on-popup">Theme: Dark 🌙</a>
+            <a id="theme-switcher" class="small-ribbon-button disable-on-popup">Theming: Dark 🌙</a>
             <!--<a id="advanced-options" class="small-ribbon-button disable-on-popup">Options ⚙️</a>-->
             <a id="custom-parameters" class="small-ribbon-button disable-on-popup">Parameters ⛓️</a>
             <div class="sidebar-section">
@@ -26,8 +26,12 @@
                         <p class="s-off">Custom Parameters</p>
                     </div>
                     <div class="option-box">
+                        <a id="toggle-parameters" class="small-ribbon-button toggle-button disable-on-popup">+</a>
+                        <p class="s-off">Enter Hospital Units</p>
+                    </div>
+                    <div class="option-box">
                         <input style="margin: 0 10px 0 0" type="text" size="6" disabled />
-                        <p class="s-off disabled-text">Return Percentage</p>
+                        <p class="s-off gs-disabled">Return Percentage</p>
                     </div>
                     <div class="option-box">
                         <input style="margin: 0 10px 0 0" type="text" size="6" />
@@ -188,7 +192,7 @@
         </div>
         <br>
         <div id="output-area">
-            <textarea class="output disable-on-popup" id="output" rows="19" cols="150" placeholder="Awaiting output..." readonly></textarea>
+            <textarea class="output disable-on-popup" id="output" rows="19" cols="100" placeholder="Awaiting output..." readonly></textarea>
         </div>
         <br>
         <div class="div-center">

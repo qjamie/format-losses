@@ -71,9 +71,9 @@ copy_output.addEventListener('click', copyToClipboard);
 process_button.addEventListener('click', processData);
 theme_switcher.addEventListener('click', toggleTheme);
 clear_textboxes.addEventListener('click', clearAllText);
-toggle_unit_properties.addEventListener('click', toggleShowUnitProperties);
-toggle_defences.addEventListener('click', toggleShowDefences);
-toggle_error_bypass.addEventListener('click', toggleAutoBypassErrors);
+toggle_unit_properties.addEventListener('click', function() {show_properties_enabled = toggleGenericOptionElement(show_properties_enabled, toggle_unit_properties, true, game_switcher)});
+toggle_defences.addEventListener('click', function() {show_defences_enabled = toggleGenericOptionElement(show_defences_enabled, toggle_defences, false)});
+toggle_error_bypass.addEventListener('click', function() {auto_bypass_errors_enabled = toggleGenericOptionElement(auto_bypass_errors_enabled, toggle_error_bypass, false)});
 game_switcher.addEventListener('change', function() {changeGame(game_switcher)});
 custom_parameters.addEventListener('click', function() {showWindowPopup(custom_parameter_window)});
 
@@ -83,38 +83,29 @@ function clearAllText() {
     output_box.value = "";
 }
 
-function toggleShowUnitProperties() {
-    if (!show_properties_enabled) {
-        show_properties_enabled = true;
-        updateToggleButton(toggle_unit_properties, true);
-        game_switcher.disabled = false;
-        game_switcher.nextElementSibling.classList.remove("gs-disabled");
+function toggleGenericOptionElement(target_option, option_button, target_is_toggleable, target_element) {
+    if (!target_is_toggleable) {
+        if (!target_option) {
+            updateToggleButton(option_button, true);
+            return true;
+        } else {
+            updateToggleButton(option_button, false);
+            return false;
+        }
     } else {
-        show_properties_enabled = false;
-        updateToggleButton(toggle_unit_properties, false);
-        game_switcher.disabled = true;
-        game_switcher.nextElementSibling.classList.add("gs-disabled");
+        if (!target_option) {
+            updateToggleButton(option_button, true);
+            target_element.disabled = false;
+            target_element.nextElementSibling.classList.remove("gs-disabled");
+            return true;
+        } else {
+            updateToggleButton(option_button, false);
+            target_element.disabled = true;
+            target_element.nextElementSibling.classList.add("gs-disabled");
+            return false;
+        }   
     }
-}
-
-function toggleShowDefences() {
-    if (!show_defences_enabled) {
-        show_defences_enabled = true;
-        updateToggleButton(toggle_defences, true);
-    } else {
-        show_defences_enabled = false;
-        updateToggleButton(toggle_defences, false);
-    }
-}
-
-function toggleAutoBypassErrors() {
-    if (!auto_bypass_errors_enabled) {
-        auto_bypass_errors_enabled = true;
-        updateToggleButton(toggle_error_bypass, true);
-    } else {
-        auto_bypass_errors_enabled = false;
-        updateToggleButton(toggle_error_bypass, false);
-    }
+    
 }
 
 function updateToggleButton(button, is_enabled) {

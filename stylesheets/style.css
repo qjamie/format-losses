@@ -211,6 +211,10 @@ input:disabled, select:disabled {
     color: var(--body-bg);
 }
 
+#current-hospital {
+    display: none;
+}
+
 .popup {
     position: fixed;
     border-radius: 5px;
