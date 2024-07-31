@@ -36,6 +36,7 @@ let game_switcher = document.getElementById("game-switcher");
 let error_message = document.getElementById("error-message");
 let error_code_text = document.getElementById("error-code");
 let error_message_content = document.getElementById("error-message-content");
+let chrome_update_fix = document.getElementById("chrome-update-fix");
 
 const close_buttons = document.querySelectorAll(".close-popup");
 const buttons_behind_popup = document.querySelectorAll(".disable-on-popup");
@@ -61,6 +62,7 @@ let info_unit_power = [];
 let info_unit_defense_status = [];
 
 let perma_to_be_returned = false;
+let chrome_update_fix_on = true;
 let window_is_currently_showing = false;
 let is_dark_theme = true;
 let current_window;
@@ -95,11 +97,22 @@ show_defences.addEventListener('click', toggleShowDefences);
 auto_bypass_errors.addEventListener('click', toggleAutoBypassErrors);
 enable_return_percentage.addEventListener('click', toggleReturnPercentage);
 game_switcher.addEventListener('click', toggleGame);
+chrome_update_fix.addEventListener('click', toggleChromeUpdateFix);
 
 function clearAllText() {
     dead_unit_input.value = "";
     hospital_unit_input.value = "";
     output_box.value = "";
+}
+
+function toggleChromeUpdateFix() {
+    if (chrome_update_fix_on) {
+        chrome_update_fix.textContent = "Chrome v197 Fix: ❌";
+        chrome_update_fix_on = false;
+    } else {
+        chrome_update_fix.textContent = "Chrome v197 Fix: ✅";
+        chrome_update_fix_on = true;
+    }
 }
 
 function toggleReturnPercentage() {
@@ -341,7 +354,7 @@ function processData() {
     let dead_unit_text = dead_unit_input.value;
     let hospital_unit_text = hospital_unit_input.value;
 
-    let line_terminator = "END";
+    let line_terminator = "ENDLINE";
     let midpoint = " x ";
 
     let dead_unit_data = extractRawText(dead_unit_text, "DEAD UNIT", "died", line_terminator);
@@ -437,13 +450,25 @@ function extractRawText(targetText, startingText, endingText, terminator) {
     while (substring_counter < last_died_occurrence) {
         let substring_start = 0;
         let substring_end = 0;
+        
+        let next_dead_occurrence = "";
 
-        let next_dead_occurrence = target_text.indexOf(startingText, substring_counter);
+        if (!chrome_update_fix_on) {
+            next_dead_occurrence = target_text.indexOf(startingText, substring_counter);
+        } else {
+            next_dead_occurrence = target_text.indexOf(startingText.toLowerCase(), substring_counter);
+        }
 
         substring_counter = next_dead_occurrence;
         substring_start = next_dead_occurrence + (startingText.length + 1);
+        
+        let next_died_occurrence = "";
 
-        let next_died_occurrence = target_text.indexOf(endingText, substring_counter);
+        if (!chrome_update_fix_on) {
+            next_died_occurrence = target_text.indexOf(endingText, substring_counter);
+        } else {
+            next_died_occurrence = target_text.indexOf(endingText.toLowerCase(), substring_counter);
+        }
 
         substring_counter = next_died_occurrence;
         substring_end = next_died_occurrence - 1;
