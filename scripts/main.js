@@ -107,10 +107,10 @@ function clearAllText() {
 
 function toggleChromeUpdateFix() {
     if (chrome_update_fix_on) {
-        chrome_update_fix.textContent = "Chrome v197 Fix: ❌";
+        chrome_update_fix.textContent = "Chrome v127 Fix: ❌";
         chrome_update_fix_on = false;
     } else {
-        chrome_update_fix.textContent = "Chrome v197 Fix: ✅";
+        chrome_update_fix.textContent = "Chrome v127 Fix: ✅";
         chrome_update_fix_on = true;
     }
 }
