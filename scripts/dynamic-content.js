@@ -4,7 +4,7 @@
 
 Attaches event listeners of any kind (mostly clicks) to each necessary element.
 
-Some of these may set a boolean variable, whilst others may use generic functions [i.e. showWindowPopup()]
+Some of these may set a boolean variable, whilst others may utilising generic functions [i.e. showWindowPopup()]
 
 */
 
@@ -16,6 +16,7 @@ toggle_defences.addEventListener('click', function() {show_defences_enabled = to
 toggle_error_bypass.addEventListener('click', function() {auto_bypass_errors_enabled = toggleGenericOptionElement(auto_bypass_errors_enabled, toggle_error_bypass, false)});
 game_switcher.addEventListener('change', function() {changeGame(game_switcher)});
 custom_parameters.addEventListener('click', function() {showWindowPopup(custom_parameter_window)});
+table_view.addEventListener('click', function() {showWindowPopup(table_view_window)});
 
 
 for (let i = 0; i < close_buttons.length; i++) { 
@@ -28,8 +29,19 @@ for (let i = 0; i < close_buttons.length; i++) {
 
 These are functions that can be used multiple times for different purposes, usually for elements that are visually identical but functionally different.
 
-*/
+------------------------------
 
+toggleGenericOptionElement():
+
+    -Required-
+    target_option: designated boolean value for the desired option
+    option_button: targeted option button, from the sidebar
+    target_is_toggleable: true if option toggles another element (i.e. related textbox)
+
+    -Optional-
+    target_element: specified element to set to active/inactive if target_is_toggleable is true
+
+*/
 function toggleGenericOptionElement(target_option, option_button, target_is_toggleable, target_element) {
     if (!target_is_toggleable) {
         if (!target_option) {
@@ -54,6 +66,18 @@ function toggleGenericOptionElement(target_option, option_button, target_is_togg
     }
     
 }
+
+/*
+
+showWindowPopup():
+
+    -Required-
+    window: designated parent element for relevant HTML window element structure
+
+    -Optional-
+    error_code: defaults to -1 (regular window), any higher specified number designates an error & relevant prompt
+
+*/
 
 function showWindowPopup(window, error_code = -1) {
     if (error_code > -1) {

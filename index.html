@@ -12,7 +12,6 @@
         <div class="sidebar">
             <h1>Log Formatter</h1>
             <a id="theme-switcher" class="small-ribbon-button disable-on-popup">Theming: Dark 🌙</a>
-            <!--<a id="advanced-options" class="small-ribbon-button disable-on-popup">Options ⚙️</a>-->
             <a id="custom-parameters" class="small-ribbon-button disable-on-popup">Parameters ⛓️</a>
             <div class="sidebar-section">
                 <h3 class="popup-header">Processing Options</h3>
@@ -30,11 +29,11 @@
                         <p class="s-off">Enter Hospital Units</p>
                     </div>
                     <div class="option-box">
-                        <input style="margin: 0 10px 0 0" type="text" size="6" disabled />
+                        <input id="percentage-textbox" style="margin: 0 10px 0 0" type="text" size="6" disabled />
                         <p class="s-off gs-disabled">Return Percentage</p>
                     </div>
                     <div class="option-box">
-                        <input style="margin: 0 10px 0 0" type="text" size="6" />
+                        <input id="capacity-textbox" style="margin: 0 10px 0 0" type="text" size="6" />
                         <p class="s-off">Hospital Capacity</p>
                     </div>
                 </div>
@@ -111,6 +110,20 @@
             <br>
             <div class="div-center">
                 <h6 class="red-error">Enable 'Auto-Bypass Errors' to see output anyway (Not Recommended)</h6>
+            </div>
+            <br>
+        </div>
+        
+        <div id="table-view-window" class="popup popup-window">
+            <h3 class="popup-header">Table View for Costs Spreadsheet</h3>
+            <div>
+                <p id="error-message-content">
+                    Easily copy the results of the conversion into the Unit Training & Healing cost Spreadsheet
+                </p>
+            </div>
+            <br>
+            <div class="div-center">
+                <a class="close-popup">Close Window</a>
             </div>
             <br>
         </div>
@@ -195,7 +208,7 @@
         </div>
         <br>
         <div class="div-center">
-            <a class="disable-on-popup important-button" id="process">Convert to Note 🛠️</a>
+            <a class="disable-on-popup important-button" id="process">Process Logs 🛠️</a>
         </div>
         <br>
         <div id="output-area">
@@ -204,6 +217,7 @@
         <br>
         <div class="div-center">
             <a class="disable-on-popup" id="copy-output">Copy Text 📄</a>
+            <a class="disable-on-popup" id="table-view">Table View 📝</a>
             <a class="disable-on-popup" id="clear-textboxes">Clear All 💥</a>
         </div>  
     </div>

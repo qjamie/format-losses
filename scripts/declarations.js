@@ -3,43 +3,67 @@
 
 -- ELEMENT VARIABLES --
 
-All elements on the page - either via ID selection, or query selection.
+All dynamic elements on the page - either via ID selection, or query selection.
 
 */
-let dead_unit_input = document.getElementById("dead-units");
-let hospital_unit_input = document.getElementById("hospital-units");
-let output_box = document.getElementById("output");
-let process_button = document.getElementById("process");
-let options_box = document.getElementById("options");
-let percentage_textbox = document.getElementById("percentage-textbox");
-let copy_output = document.getElementById("copy-output");
-let copy_output_window = document.getElementById("overlay");
-let theme_switcher = document.getElementById("theme-switcher");
-let clear_textboxes = document.getElementById("clear-textboxes");
-let show_unit_properties = document.getElementById("show-unit-properties");
-let show_defences = document.getElementById("show-defences");
-let auto_bypass_errors = document.getElementById("auto-bypass-errors");
-let game_switcher = document.getElementById("game-switcher");
-let error_message = document.getElementById("error-message");
-let error_code_text = document.getElementById("error-code");
-let error_message_content = document.getElementById("error-message-content");
-let custom_parameters = document.getElementById("custom-parameters");
-let custom_parameter_window = document.getElementById("custom-parameter-window");
-let toggle_unit_properties = document.getElementById("toggle-unit-properties");
-let toggle_defences = document.getElementById("toggle-defences");
-let toggle_parameters = document.getElementById("toggle-parameters");
-let toggle_error_bypass = document.getElementById("toggle-error-bypass");
 
+var $ = function(id) { return document.getElementById(id); };
+
+// TEXTAREAS //
+let dead_unit_input = $("dead-units");
+let hospital_unit_input = $("hospital-units");
+let output_box = $("output");
+
+// MAINPAGE BUTTONS //
+let process_button = $("process");
+let copy_output = $("copy-output");
+let table_view = $("table-view");
+let clear_textboxes = $("clear-textboxes");
+
+// SIDEBAR RIBBON BUTTONS //
+let theme_switcher = $("theme-switcher");
+let custom_parameters = $("custom-parameters");
+
+// OPTIONS: SHOW/HIDE //
+let show_unit_properties = $("show-unit-properties");
+let show_defences = $("show-defences");
+
+// OPTIONS: TOGGLES //
+let toggle_unit_properties = $("toggle-unit-properties");
+let toggle_defences = $("toggle-defences");
+let toggle_parameters = $("toggle-parameters");
+let toggle_error_bypass = $("toggle-error-bypass");
+
+// OPTIONS: OTHER //
+let auto_bypass_errors = $("auto-bypass-errors");
+
+// INPUT BOXES + DROPDOWNS //
+let percentage_textbox = $("percentage-textbox");
+let capacity_textbox = $("capacity-textbox");
+let game_switcher = $("game-switcher");
+
+// WINDOWS //
+let copy_output_window = $("overlay");
+let table_view_window = $("table-view-window");
+let custom_parameter_window = $("custom-parameter-window");
+
+// ERROR POP-UP CONTENT //
+let error_message = $("error-message");
+let error_code_text = $("error-code");
+let error_message_content = $("error-message-content");
+
+// GROUP SELECTORS //
 const close_buttons = document.querySelectorAll(".close-popup");
 const buttons_behind_popup = document.querySelectorAll(".disable-on-popup");
 
+// OTHER //
 let css_root_element = document.querySelector(':root');
 
 /* 
 
 -- PROCESS VARIABLES --
 
-Custom variables which are used to help with processing the inputted data
+Custom variables which are used to help with processing inputted data.
 
 */
 
