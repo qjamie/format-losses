@@ -37,6 +37,7 @@ let error_message = document.getElementById("error-message");
 let error_code_text = document.getElementById("error-code");
 let error_message_content = document.getElementById("error-message-content");
 let chrome_update_fix = document.getElementById("chrome-update-fix");
+let display_unordered = document.getElementById("display-unordered");
 
 const close_buttons = document.querySelectorAll(".close-popup");
 const buttons_behind_popup = document.querySelectorAll(".disable-on-popup");
@@ -49,6 +50,7 @@ let option_status = 0;
 let show_properties_enabled = false;
 let show_defences_enabled = false;
 let auto_bypass_errors_enabled = false;
+let display_unordered_enabled = false;
 
 let encoded_json_one;
 let decoded_unit_json;
@@ -98,6 +100,7 @@ auto_bypass_errors.addEventListener('click', toggleAutoBypassErrors);
 enable_return_percentage.addEventListener('click', toggleReturnPercentage);
 game_switcher.addEventListener('click', toggleGame);
 chrome_update_fix.addEventListener('click', toggleChromeUpdateFix);
+display_unordered.addEventListener('click', toggleDisplayUnordered);
 
 function clearAllText() {
     dead_unit_input.value = "";
@@ -142,6 +145,14 @@ function toggleShowDefences() {
         show_defences_enabled = true;
     } else {
         show_defences_enabled = false;
+    }
+}
+
+function toggleDisplayUnordered() {
+    if (display_unordered.checked) {
+        display_unordered_enabled = true;
+    } else {
+        display_unordered_enabled = false;
     }
 }
 
@@ -412,16 +423,16 @@ function processData() {
         output_text += "[ERRORS BYPASSED - THESE RESULTS ARE VERY LIKELY BROKEN OR INACCURATE]\n\n";
     }
 
-    output_text += "Dead Units -- " + dead_unit_total.toLocaleString("en-US") +  ":\n\n";
+    output_text += "Units Killed | " + dead_unit_total.toLocaleString("en-US") +  ":\n\n";
     output_text += createUnitList(dead_unit_types, dead_unit_losses, 1, option_status, dead_attached_ids);
 
     if (hospital_unit_total > 0) {
-        output_text += "\nHospital Units -- " + hospital_unit_total.toLocaleString("en-US") + ":\n\n";
+        output_text += "\nSent to Hospital | " + hospital_unit_total.toLocaleString("en-US") + ":\n\n";
         output_text += createUnitList(hospital_unit_types, hospital_unit_losses, 1, option_status, hospital_attached_ids);
     }
 
     if (perma_unit_total > 0) {
-        output_text += "\nPermanent Losses -- " + perma_unit_total.toLocaleString("en-US") + ":\n\n";
+        output_text += "\nTheoretical Perma | " + perma_unit_total.toLocaleString("en-US") + ":\n\n";
         output_text += createUnitList(perma_unit_types, perma_unit_losses, 1, option_status, perma_attached_ids, true);
     } else {
         output_text += "\nNo perma-losses recorded in attack ";
@@ -450,7 +461,7 @@ function extractRawText(targetText, startingText, endingText, terminator) {
     while (substring_counter < last_died_occurrence) {
         let substring_start = 0;
         let substring_end = 0;
-        
+
         let next_dead_occurrence = "";
 
         if (!chrome_update_fix_on) {
@@ -476,7 +487,9 @@ function extractRawText(targetText, startingText, endingText, terminator) {
         substring_text += target_text.substring(substring_start, substring_end) + terminator + " \n";
     }
     
-    return substring_text.replaceAll(",", "");
+    let final_extracted_text = substring_text.replaceAll(",", "");
+
+    return final_extracted_text;
 }
 
 function splitTextIntoData(targetText, midpoint, terminator) {
@@ -581,9 +594,11 @@ function sortUnitData(unsortedUnitData) {
         unit_list.push({'unit_name': units[i], 'units_lost': losses[i]});
     }
 
-    unit_list.sort(function(a, b) {
-        return ((a.unit_name < b.unit_name) ? -1 : 0);
-    });
+    if (!display_unordered_enabled) {
+        unit_list.sort(function(a, b) {
+            return ((a.unit_name < b.unit_name) ? -1 : 0);
+        });
+    }
 
     for (var i = 0; i < unit_list.length; i++) {
         losses[i] = unit_list[i].unit_name;
