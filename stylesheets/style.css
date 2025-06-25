@@ -40,9 +40,11 @@ a {
     padding-left: 15px;
     padding-right: 15px;
     border-radius: 10px;
-    transition: 0.25s;
     font-size: 14px;
+    font-weight: bolder;
     margin: 0 auto;
+    margin-left: 5px;
+    margin-right: 5px;
     user-select: none;
 }
 
@@ -69,7 +71,6 @@ textarea, hr {
 a:hover {
     background-color: var(--button-highlight);
     color: var(--body-bg);
-    transition: 0.25s;
     cursor: pointer;
 }
 
@@ -105,6 +106,16 @@ input[type="number"], select {
     display: none;
 }
 
+.su-disabled {
+    color: grey !important;
+}
+
+.ts-disabled {
+    color: grey !important;
+    border-color: grey;
+    pointer-events: none;
+}
+
 #error-code, .red-error {
     color: #ff6262;
     border-color: #ff6262;
@@ -135,11 +146,9 @@ input[type="number"], select {
     text-align: center;
     color: var(--button-highlight);
     opacity: 0;
-    transition: 0.5s;
     transform: translate(-50%, -50%);
     box-shadow: 0px 0px 20px rgba(0,0,0, 0.5);
     background-color: var(--textarea-bg);
-    transition: 0.5s;
 }
 
 .options-toggle {
@@ -153,6 +162,7 @@ input[type="number"], select {
     padding-right: 8px;
     border-radius: 5px;
     margin: 0 auto;
+    font-weight: normal;
     margin-bottom: 25px;
 }
 

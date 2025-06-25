@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Format Losses</title>
+    <title>Loss Calculator v1.1</title>
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
 </head>
 <body>
     
     <header>
-        <h1>Format Losses</h1>
-        <a id="theme-switcher" class="small-ribbon-button disable-on-popup">Website Theme: 🌙</a>
-        <a id="advanced-options" class="small-ribbon-button disable-on-popup">Advanced Options ⚙️</a>
-        <a id="chrome-update-fix" class="small-ribbon-button disable-on-popup">Chrome v127 Fix: ✅</a>
-
-        <h6>Google Chrome Update 127 changes how text is copied from dynamic web content. Keep "Chrome v127 Fix" turned on if your pasted logs include 'dead unit' or 'hospital unit' in lowercase. <br>If these pieces of text are still capitalised when copied over, this setting can be turned off</h6>
+        <h1>Loss Calculator v1.1</h1>
+        <a id="theme-switcher" class="small-ribbon-button disable-on-popup">Theme: Dark 🌙</a>
+        <a id="advanced-options" class="small-ribbon-button disable-on-popup">Output Options ⚙️</a>
 
         <div id="overlay" class="popup">
             <h3>Copied to Clipboard</h3>
@@ -42,18 +39,40 @@
         
         <div id="advanced-options-window" class="popup">
             <div class="div-center">
-                <h3>Advanced Options</h3>
+                <h2><u>Output Options</u></h2>
             </div>
-            <input id="show-unit-properties" title="Shows unit power and tier. May slow down processing. Default: OFF" type="checkbox">Show Unit Properties</input>
+            <hr>
+            <div>
+                <h3>Fine-tuning</h3>
+                <input id="combine-units" title="Takes all common logs and aggregates the unit counts. Default: On" type="checkbox" checked>Combine Units</input>
+                <br>
+                <input id="display-unordered" title="Shows units in the order of their respective original list. Default: OFF" type="checkbox">Sort Alphabetically</input>
+                <br>
+                <input id="show-log-time" title="Adds time next to log (only available with Display Unordered). Default: OFF" type="checkbox">Show Log Time</input>
+                <br>
+                <div class="div-center">
+                <a id="time-style-switcher" class="small-ribbon-button ts-disabled">🕒 Time Style: Alongside</a>
+                </div>
+            </div>
+
             <br>
-            <input id="show-defences" title="Allows defences to be shown on the note as valid losses. Default: OFF" type="checkbox">Also Show Defences</input>
-            <br>
-            <input id="display-unordered" title="Shows units in the order of their respective original list. Default: OFF" type="checkbox">Display Unordered</input>
-            <br>
-            <input id="auto-bypass-errors" title="Bypasses all error messages automatically. Can be used to find missed logs - otherwise, not recommended. Default: OFF" type="checkbox">Auto-Bypass Errors</input>
-            <br>
-            </input>
-            <br>
+
+            <div>
+                <h3>Extras</h3>
+                <input id="show-unit-properties" title="Shows unit power and tier. May slow down processing. Default: OFF" type="checkbox">Show Unit Properties</input>
+                <br>
+                <input id="show-defences" title="Allows defences to be shown on the note as valid losses. This can only be used in conjuction with 'Show Unit Properties' Default: OFF" type="checkbox" disabled><span class="su-disabled" style="margin: 0 auto;">Show Defences</span></input>
+                <br>
+            </div>
+
+            <div>
+                <h3>Error Handling</h3>
+                <input id="auto-bypass-errors" title="Bypasses all error messages automatically. Can be used to find missed logs - otherwise, not recommended. Default: OFF" type="checkbox">Auto-Bypass Errors</input>
+                <br>
+                </input>
+                <br>
+            </div>
+
             <div class="div-center">
                 <a class="close-popup">Confirm Options</a>
             </div>
@@ -101,24 +120,19 @@
     
     <main>
         <div id="input-area">
-            <textarea class="input disable-on-popup" id="dead-units" rows="19" cols="52" placeholder="Enter Dead Unit logs... ⤵️"></textarea>
-            <textarea class="input disable-on-popup" id="hospital-units" rows="19" cols="52" placeholder="Enter Hospital Unit logs... ⤵️"></textarea>
-            <!--<textarea class="input disable-on-popup" id="hospital-units" rows="19" cols="52" placeholder="Enter Current Hospital Units... ⤵️"></textarea>-->
+            <textarea class="input disable-on-popup" id="dead-units" rows="16" cols="52" placeholder="Enter Dead Unit logs... ⤵️"></textarea>
+            <textarea class="input disable-on-popup" id="hospital-units" rows="16" cols="52" placeholder="Enter Hospital Unit logs... ⤵️"></textarea>
         </div>
-        <h4>Processing Options</h4>
-        <div>
-            <!--<a id="hospital-capacity" class="small-ribbon-button disable-on-popup">Hospital Capacity: 300,000</a>-->
-            <a id="game-switcher" class="small-ribbon-button disable-on-popup gs-hidden">ONE Mode 🛸</a>
+        <div id="game-selector-menu" class="gs-hidden">
+            <h4>Toggle Selected Game</h4>
+            <a id="game-switcher" class="small-ribbon-button disable-on-popup">Operation: New Earth 🛸</a>
         </div>
-        <div>
-            <a id="enable-return-percentage" class="small-ribbon-button disable-on-popup">Return Perma-Losses: ❌</a>
-            <a id="return-percentage" class="small-ribbon-button disable-on-popup rp-disabled">Return Percentage: 30%</a>
-        </div>
-        <!--<a id="list-order" class="small-ribbon-button disable-on-popup">Output Order: Alphabetic</a>-->
         <div id="output-area">
-            <textarea class="output disable-on-popup" id="output" rows="19" cols="112" placeholder="Awaiting output..." readonly></textarea>
+            <textarea class="output disable-on-popup" id="output" rows="16" cols="112" placeholder="Awaiting output..." readonly></textarea>
         </div>
-        <a class="disable-on-popup" id="process">Convert 🛠️</a>
+        <h5 id="line-counter">Line count: 0</h5>
+        <br>
+        <a class="disable-on-popup" id="process">Submit 🛠️</a>
         <a class="disable-on-popup" id="copy-output">Copy Output 📄</a>
         <a class="disable-on-popup" id="clear-textboxes">Clear 💥</a>
     </div>
