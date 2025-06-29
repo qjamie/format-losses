@@ -7,6 +7,8 @@
     --body-bg: #191919; /*whitesmoke*/
     --button-hover: #252525; /**/
     --button-active: #505050; /**/
+    --textarea-active: #131219; /*f2f0ff*/
+    --textarea-hover: rgba(255, 255, 255, 0.05); /*rgba(0, 0, 0, 0.05)*/
     --cursor: auto;
 }
 
@@ -29,7 +31,9 @@ header, main {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    color: var(--button-highlight)
+    color: var(--button-highlight);
+    margin-bottom: 15px;
+    text-align: center;
 }
 
 a {
@@ -46,36 +50,83 @@ a {
     margin-left: 5px;
     margin-right: 5px;
     user-select: none;
+    transition: 0.3s;
+}
+
+a:hover {
+    border: 1px solid #0000;
+    color: var(--body-bg);
+    cursor: pointer;
+    background: linear-gradient(var(--angle), var(--button-highlight), var(--button-highlight)) padding-box, linear-gradient(var(--angle), skyblue, mediumslateblue) border-box;
+    animation: 2s rotate linear infinite;
+    transition: 0.3s;
+}
+
+a:active {
+    color: var(--button-highlight);
+    background: linear-gradient(var(--angle), var(--button-active), var(--button-active)) padding-box, linear-gradient(var(--angle), skyblue, mediumslateblue) border-box;
+    animation: 2s rotate linear infinite;
+    transition: 0.3s;
 }
 
 textarea {
     color: var(--button-highlight);
     background-color: var(--textarea-bg);
     padding: 10px;
+    border: 3px solid transparent;
     border-radius: 5px;
     resize: none;
+    transition: 0.3s;
+    font-size: 0.8rem;
 }
 
 textarea.input {
     overflow-y: scroll;
 }
 
+textarea:hover {
+    box-shadow: 0 0 10px 0 var(--textarea-hover);
+    transition: 0.3s;
+}
+
+textarea:focus {
+    outline: none;
+    border: 3px solid #0000;
+    box-sizing: border-box;
+    background: linear-gradient(var(--textarea-active), var(--textarea-active)) padding-box, linear-gradient(var(--angle), skyblue, mediumslateblue) border-box;
+    animation: 2s rotate linear infinite;
+    transition: background 0.3s;
+}
+
+@keyframes rotate {
+    to {
+      --angle: 360deg;
+    }
+}
+  
+@property --angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+div, p {
+    margin: 15px;
+}
+
+div.popup {
+    margin: 0px;
+}
+
 textarea.output {
     resize: vertical;
+    caret-color: transparent;
+    cursor: default;
+    transition: 0.2s height ease-in-out;
 }
 
-textarea, hr {
+hr {
     border: none;
-}
-
-a:hover {
-    background-color: var(--button-highlight);
-    color: var(--body-bg);
-    cursor: pointer;
-}
-
-a:active {
-    background-color: var(--button-active);
 }
 
 input {
@@ -94,6 +145,13 @@ input[type="number"], select {
     color: var(--button-highlight);
 }
 
+input[type=checkbox]
+{
+  transform: scale(1.5);
+  padding: 10px;
+  cursor: pointer;
+}
+
 #input-area, #output-area {
     text-align: center;
     display: flex;
@@ -101,16 +159,24 @@ input[type="number"], select {
     justify-content: center;
 }
 
-#overlay, #advanced-options-window, #hospital-capacity-window, #return-percentage-window, #list-order-window, #error-message, .gs-hidden {
+#overlay, #advanced-options-window, #error-message, .gs-hidden {
     opacity: 0;
+    transition: 0.3s;
     display: none;
+}
+
+.important-header {
+    background: linear-gradient(45deg, skyblue, mediumslateblue);
+    padding: 5px;
+    border-radius: 5px;
+    margin: 0 auto;
 }
 
 .su-disabled {
     color: grey !important;
 }
 
-.ts-disabled {
+.ts-disabled, .mpl-disabled {
     color: grey !important;
     border-color: grey;
     pointer-events: none;
@@ -121,12 +187,25 @@ input[type="number"], select {
     border-color: #ff6262;
 }
 
+#error-code.important-header {
+    background: #ff6262;
+    color: var(--button-highlight);
+    padding: 5px;
+    border-radius: 5px;
+    margin: 0 auto;
+}
+
 #error-message, #error-message > div > a {
     border-color: #ff6262;
 }
 
 #error-message > div > a:hover {
-    background-color: #ff6262;
+    background: #ff6262;
+    color: var(--body-bg);
+}
+
+#error-message > div > a:active {
+    background: #ff6262;
     color: var(--body-bg);
 }
 
@@ -137,18 +216,29 @@ input[type="number"], select {
 .popup {
     position: fixed;
     border-radius: 5px;
-    border: solid 1px var(--button-highlight);
+    border: 3px solid #0000;
+    box-sizing: border-box;
     width: auto;
     height: auto;
-    top: 45%;
-    left: 49.5%;
+    top: 30%;
+    left: 50%;
     z-index: 2;
     text-align: center;
     color: var(--button-highlight);
     opacity: 0;
+    transition: opacity 0.3s;
     transform: translate(-50%, -50%);
-    box-shadow: 0px 0px 20px rgba(0,0,0, 0.5);
-    background-color: var(--textarea-bg);
+    box-shadow: 0 0 0 2000px rgba(0,0,0, 0.5);
+    background: linear-gradient(var(--textarea-active), var(--textarea-active)) padding-box, linear-gradient(var(--angle), skyblue, mediumslateblue) border-box;
+    animation: 2s rotate linear infinite;
+}
+
+.options-section {
+    width: 225px;
+    flex: 1;
+    margin-bottom: 5px;
+    border-radius: 2.5px;
+    background: var(--textarea-hover);
 }
 
 .options-toggle {
@@ -174,11 +264,8 @@ input[type="number"], select {
     pointer-events: none;
     user-select: none;
 }
-
-.rp-disabled {
-    color: grey;
-    border-color: grey;
-    pointer-events: none;
+.options-flex-container {
+    display: flex;
 }
 
 ::-webkit-scrollbar {
