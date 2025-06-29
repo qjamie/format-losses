@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loss Calculator v1.1</title>
+    <title>Losses Formatter v1.1</title>
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
 </head>
 <body>
     
     <header>
-        <h1>Loss Calculator v1.1</h1>
+        <h1 class="disable-on-popup">Losses Formatter <span class="important-header">v1.1</span></h1>
         <a id="theme-switcher" class="small-ribbon-button disable-on-popup">Theme: Dark 🌙</a>
         <a id="advanced-options" class="small-ribbon-button disable-on-popup">Output Options ⚙️</a>
 
@@ -18,123 +18,91 @@
         </div>
 
         <div id="error-message" class="popup">
-            <h3 id="error-code">Error Code 0</h3>
+            <div class="div-center">
+                <h3 id="error-code" class="important-header">Error Code 0</h3>
+            </div>
+
             <div>
                 <p id="error-message-content">
                     This is an example error message, and should not show up during runtime 
-                    <br><br>
+                    <br>
                     Send me a message if you see this, along with what you did
                 </p>
             </div>
-            <br>
+
             <div class="div-center">
                 <a id="close-error-button" class="close-popup">Close and Stop Processing</a>
             </div>
-            <br>
+
             <div class="div-center">
                 <h6 class="red-error">Enable 'Auto-Bypass' errors to see output anyway (Not Recommended)</h6>
             </div>
-            <br>
-        </div>
-        
-        <div id="advanced-options-window" class="popup">
-            <div class="div-center">
-                <h2><u>Output Options</u></h2>
-            </div>
-            <hr>
-            <div>
-                <h3>Fine-tuning</h3>
-                <input id="combine-units" title="Takes all common logs and aggregates the unit counts. Default: On" type="checkbox" checked>Combine Units</input>
-                <br>
-                <input id="display-unordered" title="Shows units in the order of their respective original list. Default: OFF" type="checkbox">Sort Alphabetically</input>
-                <br>
-                <input id="show-log-time" title="Adds time next to log (only available with Display Unordered). Default: OFF" type="checkbox">Show Log Time</input>
-                <br>
-                <div class="div-center">
-                <a id="time-style-switcher" class="small-ribbon-button ts-disabled">🕒 Time Style: Alongside</a>
-                </div>
-            </div>
-
-            <br>
-
-            <div>
-                <h3>Extras</h3>
-                <input id="show-unit-properties" title="Shows unit power and tier. May slow down processing. Default: OFF" type="checkbox">Show Unit Properties</input>
-                <br>
-                <input id="show-defences" title="Allows defences to be shown on the note as valid losses. This can only be used in conjuction with 'Show Unit Properties' Default: OFF" type="checkbox" disabled><span class="su-disabled" style="margin: 0 auto;">Show Defences</span></input>
-                <br>
-            </div>
-
-            <div>
-                <h3>Error Handling</h3>
-                <input id="auto-bypass-errors" title="Bypasses all error messages automatically. Can be used to find missed logs - otherwise, not recommended. Default: OFF" type="checkbox">Auto-Bypass Errors</input>
-                <br>
-                </input>
-                <br>
-            </div>
-
-            <div class="div-center">
-                <a class="close-popup">Confirm Options</a>
-            </div>
-            <br>
-        </div>
-
-        <div id="hospital-capacity-window" class="popup">
-            <h3>Adjust Hospital Capacity</h3>
-            <h6>Increments in steps of 100,000</h6>
-            <input id="new-hospital-capacity" title="Changes the hospital capcity used in calculation. Default: 300,000" type="number" value="300000" maxlength="7" step="100000"/>
-            <br>
-            <div>
-            <a id="set-hospital-capacity-adjustment" class="close-popup">Set Adjustment</a>
-            </div>
-            <br>
-        </div>
-        
-
-        <div id="return-percentage-window" class="popup">
-            <h3>Adjust Return Percentage</h3>
-            <h6>Increments in steps of 5%</h6>
-            <input style="width: 30%;" id="new-return-percentage" title="Changes the percentage of units to return in calculation. Default: 30%" type="number" value="30" maxlength="3" max="100" min="5" step="5"/>
-            <br>
-            <div>
-            <a id="set-return-percentage-adjustment" class="close-popup">Set Adjustment</a>
-            </div>
-            <br>
-        </div>
-        
-        <div id="list-order-window" class="popup">
-            <h3>Set List Order</h3>
-            <h6>Select from dropdown</h6>
-            <select id="order-dropdown" title="Determines the order that units will be outputted in. Default: Alphabetic" checked>
-                <option value="alphabetic">Alphabetic</option>
-                <option value="unit-tier">Unit Tier</option>
-                <option value="prioritise-offence">Prioritise Offence</option>
-            </select>
-            <br>
-            <div>
-                <a id="set-new-list-order" class="close-popup">Confirm Options</a>
-            </div>
-            <br>
         </div>
     </header>
     
+    <div id="advanced-options-window" class="popup">
+        <div class="div-center">
+            <h2 class="important-header">Output Options</h2>
+        </div>
+        <div class="options-flex-container">
+            <div class="options-section">
+                <h3>Fine-tuning</h3>
+                <form autocomplete="off">
+                    <input id="combine-units" title="Takes all common logs and aggregates the unit counts. Default: On" type="checkbox" checked>Combine Units</input>
+                    <br>
+                    <input id="merge-perma" title="Shows units in the order of their respective original list. Default: OFF" type="checkbox"><span class="mpl-disabled" style="margin: 0 auto;">Merge Perma-losses</span></input>
+                    <br>
+                    <input id="display-alphabetically" title="Shows units in the order of their respective original list. Default: OFF" type="checkbox">Sort Alphabetically</input>
+                </form>
+            </div>
+            <div class="options-section">
+                <h3>Extra Log Options</h3>
+                <form autocomplete="off">
+                    <input id="show-unit-properties" title="Shows unit power and tier. May slow down processing. Default: OFF" type="checkbox">Show Unit Details</input>
+                    <br>
+                    <input id="show-defences" title="Allows defences to be shown on the note as valid losses. This can only be used in conjuction with 'Show Unit Properties' Default: OFF" type="checkbox" disabled><span class="su-disabled" style="margin: 0 auto;">Show Defences</span></input>
+                    <br>
+                    <input id="show-log-time" title="Adds time next to log (only available with Display Unordered). Default: OFF" type="checkbox">Show Log Time</input>
+                    <br>
+                    <div class="div-center">
+                    <a id="time-style-switcher" class="small-ribbon-button ts-disabled">🕒 Time Style: Alongside</a>
+                    </div>
+                </form>
+            </div>
+            <div class="options-section">
+                <h3>Error Handling</h3>
+                <form autocomplete="off">
+                    <input id="auto-bypass-errors" title="Bypasses all error messages automatically. Can be used to find missed logs - otherwise, not recommended. Default: OFF" type="checkbox">Auto-Bypass Errors</input>
+                </form>
+            </div>
+        </div>
+        <div class="div-center">
+            <a class="close-popup">Confirm Changes ➡️</a>
+            <br>
+        </div>
+    </div>
+
     <main>
         <div id="input-area">
-            <textarea class="input disable-on-popup" id="dead-units" rows="16" cols="52" placeholder="Enter Dead Unit logs... ⤵️"></textarea>
-            <textarea class="input disable-on-popup" id="hospital-units" rows="16" cols="52" placeholder="Enter Hospital Unit logs... ⤵️"></textarea>
+            <textarea autocomplete="off" class="input disable-on-popup" id="dead-units" rows="16" cols="52" placeholder="Enter Dead Unit logs... ⤵️"></textarea>
+            <textarea autocomplete="off" class="input disable-on-popup" id="hospital-units" rows="16" cols="52" placeholder="Enter Hospital Unit logs... ⤵️"></textarea>
         </div>
         <div id="game-selector-menu" class="gs-hidden">
             <h4>Toggle Selected Game</h4>
             <a id="game-switcher" class="small-ribbon-button disable-on-popup">Operation: New Earth 🛸</a>
         </div>
         <div id="output-area">
-            <textarea class="output disable-on-popup" id="output" rows="16" cols="112" placeholder="Awaiting output..." readonly></textarea>
+            <textarea autocomplete="off" class="output disable-on-popup" id="output" rows="16" cols="112" placeholder="Awaiting output..." readonly></textarea>
         </div>
-        <h5 id="line-counter">Line count: 0</h5>
-        <br>
-        <a class="disable-on-popup" id="process">Submit 🛠️</a>
-        <a class="disable-on-popup" id="copy-output">Copy Output 📄</a>
-        <a class="disable-on-popup" id="clear-textboxes">Clear 💥</a>
+        <h5 class="disable-on-popup" id="line-counter">Line count: 0</h5>
+        <div style="margin: 10px;">
+            <a class="disable-on-popup" id="process">Submit and Process 🛠️</a>
+        </div>
+        <div style="margin: 20px;">
+            <a class="disable-on-popup small-ribbon-button" id="copy-output">Copy 📄</a>
+            <a class="disable-on-popup small-ribbon-button" id="clear-textboxes">Clear 💥</a>
+            <a class="disable-on-popup small-ribbon-button" id="maximize">Expand ⛶</a>
+        </div>
     </div>
     </main>
 

@@ -1,46 +1,53 @@
-let dead_unit_input = document.getElementById("dead-units");
-let hospital_unit_input = document.getElementById("hospital-units");
-let output_box = document.getElementById("output");
-let process_button = document.getElementById("process");
-let options_box = document.getElementById("options");
-let percentage_textbox = document.getElementById("percentage-textbox");
-let copy_output = document.getElementById("copy-output");
-let copy_output_window = document.getElementById("overlay");
-let advanced_options = document.getElementById("advanced-options");
-let advanced_options_window = document.getElementById("advanced-options-window");
-let list_order_window = document.getElementById("list-order-window");
-let theme_switcher = document.getElementById("theme-switcher");
-let clear_textboxes = document.getElementById("clear-textboxes");
-let show_unit_properties = document.getElementById("show-unit-properties");
-let show_defences = document.getElementById("show-defences");
-let auto_bypass_errors = document.getElementById("auto-bypass-errors");
-let game_switcher = document.getElementById("game-switcher");
-let game_selector_menu = document.getElementById("game-selector-menu");
-let error_message = document.getElementById("error-message");
-let error_code_text = document.getElementById("error-code");
-let error_message_content = document.getElementById("error-message-content");
-let display_alphabetically = document.getElementById("display-unordered");
-let combine_units = document.getElementById("combine-units");
-let line_counter = document.getElementById("line-counter");
-let show_log_time = document.getElementById("show-log-time");
-let time_style_switcher = document.getElementById("time-style-switcher");
+var $ = function(id) { return document.getElementById(id); };
+
+let dead_unit_input = $("dead-units");
+let hospital_unit_input = $("hospital-units");
+let output_box = $("output");
+let process_button = $("process");
+let options_box = $("options");
+let percentage_textbox = $("percentage-textbox");
+let copy_output = $("copy-output");
+let copy_output_window = $("overlay");
+let advanced_options = $("advanced-options");
+let advanced_options_window = $("advanced-options-window");
+let list_order_window = $("list-order-window");
+let theme_switcher = $("theme-switcher");
+let clear_textboxes = $("clear-textboxes");
+let show_unit_properties = $("show-unit-properties");
+let show_defences = $("show-defences");
+let auto_bypass_errors = $("auto-bypass-errors");
+let game_switcher = $("game-switcher");
+let game_selector_menu = $("game-selector-menu");
+let error_message = $("error-message");
+let error_code_text = $("error-code");
+let error_message_content = $("error-message-content");
+let display_alphabetically = $("display-alphabetically");
+let combine_units = $("combine-units");
+let line_counter = $("line-counter");
+let show_log_time = $("show-log-time");
+let time_style_switcher = $("time-style-switcher");
+let merge_perma = $("merge-perma");
+let maximize = $('maximize');
 
 let show_defences_text = document.querySelector(".su-disabled");
+let merge_perma_text = document.querySelector(".mpl-disabled");
 
 const close_buttons = document.querySelectorAll(".close-popup");
 const buttons_behind_popup = document.querySelectorAll(".disable-on-popup");
 
-let css_root_element = document.querySelector(':root');
+let css_root = document.querySelector(':root');
 
 let selected_game = 0;
 let time_style = 0;
 let option_status = 0;
+let num_rows = 0;
 
 let show_properties_enabled = false;
 let show_defences_enabled = false;
 let auto_bypass_errors_enabled = false;
 let show_time_enabled = false;
 let alphabetic_sorting_enabled = false;
+let merge_perma_enabled = false;
 
 let combine_units_enabled = true;
 
@@ -61,7 +68,7 @@ let current_window;
 
 let percentage_modifier = 0.3;
 
-encoded_json_one = document.getElementById("encjson");
+encoded_json_one = $("encjson");
 decoded_unit_json = atob(encoded_json_one.innerHTML);
 
 parsed_unit_json = JSON.parse(decoded_unit_json);
@@ -89,11 +96,34 @@ display_alphabetically.addEventListener('click', toggleAlphabeticDisplay);
 combine_units.addEventListener('click', toggleCombineUnits);
 show_log_time.addEventListener('click', toggleLogTime);
 time_style_switcher.addEventListener('click', toggleTimeStyleSwitch);
+merge_perma.addEventListener('click', toggleMergePerma);
+maximize.addEventListener('click', toggleOutputSize);
 
 function clearAllText() {
     dead_unit_input.value = "";
     hospital_unit_input.value = "";
     output_box.value = "";
+}
+
+function toggleMergePerma() {
+    if (merge_perma.checked) {
+        merge_perma_enabled = true;
+    } else {
+        merge_perma_enabled = false;
+    }
+}
+
+function toggleOutputSize() {
+    if (output_box.rows < 17) {
+        if (num_rows > 16) {
+        output_box.rows = num_rows;
+        maximize.textContent = "Shrink ⛶"
+        }
+    } else {
+        output_box.rows = 16;
+        maximize.textContent = "Expand ⛶"
+    }
+    
 }
 
 function toggleShowUnitProperties() {
@@ -171,8 +201,12 @@ function toggleAutoBypassErrors() {
 function toggleCombineUnits() {
     if (combine_units.checked) {
         combine_units_enabled = true;
+        merge_perma.disabled = true;
+        merge_perma_text.classList.add("mpl-disabled");
     } else {
         combine_units_enabled = false;
+        merge_perma.disabled = false;
+        merge_perma_text.classList.remove("mpl-disabled");
     }
 }
 
@@ -205,20 +239,20 @@ function toggleGame() {
     switch(selected_game) {
         case 0:
             game_switcher.textContent = "Warhammer: Chaos and Conquest ⚔️";
-            let encoded_json_war = document.getElementById("encjson2");
+            let encoded_json_war = $("encjson2");
             decoded_unit_json = atob(encoded_json_war.innerHTML);
             selected_game = 1;
             break;
         case 1:
             game_switcher.textContent = "Godzilla x Kong: Titan Chasers 🦖";
-            let encoded_json_gxk = document.getElementById("encjson3");
+            let encoded_json_gxk = $("encjson3");
             decoded_unit_json = atob(encoded_json_gxk.innerHTML);
             selected_game = 2;
             break;
         case 2:
         default:
             game_switcher.textContent = "Operation: New Earth 🛸";
-            encoded_json_one = document.getElementById("encjson");
+            encoded_json_one = $("encjson");
             decoded_unit_json = atob(encoded_json_one.innerHTML);
             selected_game = 0;
             break;
@@ -238,25 +272,29 @@ function toggleGame() {
 }
 
 function changeThemeLight() {
-    css_root_element.style.setProperty('--button-bg', 'eeeeee');
-    css_root_element.style.setProperty('--button-highlight', 'black');
-    css_root_element.style.setProperty('--textarea-bg', '#e8e8e8');
-    css_root_element.style.setProperty('--scrollbar-thumb', '#c9c9c9');
-    css_root_element.style.setProperty('--scrollbar-thumb-hover', '#adadad');
-    css_root_element.style.setProperty('--body-bg', 'whitesmoke');
-    css_root_element.style.setProperty('--button-hover', '#e8e8e8');
-    css_root_element.style.setProperty('--button-active', '#c9c9c9');
+    css_root.style.setProperty('--button-bg', 'eeeeee');
+    css_root.style.setProperty('--button-highlight', 'black');
+    css_root.style.setProperty('--textarea-bg', '#e8e8e8');
+    css_root.style.setProperty('--scrollbar-thumb', '#c9c9c9');
+    css_root.style.setProperty('--scrollbar-thumb-hover', '#adadad');
+    css_root.style.setProperty('--body-bg', 'whitesmoke');
+    css_root.style.setProperty('--button-hover', '#e8e8e8');
+    css_root.style.setProperty('--button-active', '#c9c9c9');
+    css_root.style.setProperty('--textarea-active', '#f2f0ff');
+    css_root.style.setProperty('--textarea-hover', 'rgba(0, 0, 0, 0.05)');
 }
 
 function changeThemeDark() {
-    css_root_element.style.setProperty('--button-bg', '#131313');
-    css_root_element.style.setProperty('--button-highlight', 'white');
-    css_root_element.style.setProperty('--textarea-bg', '#111111');
-    css_root_element.style.setProperty('--scrollbar-thumb', '#323232');
-    css_root_element.style.setProperty('--scrollbar-thumb-hover', '#404040');
-    css_root_element.style.setProperty('--body-bg', '#191919');
-    css_root_element.style.setProperty('--button-hover', '#252525');
-    css_root_element.style.setProperty('--button-active', '#505050');
+    css_root.style.setProperty('--button-bg', '#131313');
+    css_root.style.setProperty('--button-highlight', 'white');
+    css_root.style.setProperty('--textarea-bg', '#111111');
+    css_root.style.setProperty('--scrollbar-thumb', '#323232');
+    css_root.style.setProperty('--scrollbar-thumb-hover', '#404040');
+    css_root.style.setProperty('--body-bg', '#191919');
+    css_root.style.setProperty('--button-hover', '#252525');
+    css_root.style.setProperty('--button-active', '#505050');
+    css_root.style.setProperty('--textarea-active', '#131219');
+    css_root.style.setProperty('--textarea-hover', 'rgba(255, 255, 255, 0.05)');
 }
 
 function showWindowPopup(window, error_code = -1) {
@@ -265,19 +303,19 @@ function showWindowPopup(window, error_code = -1) {
 
         switch(error_code) {
             case 0:
-                error_message_content.innerHTML = "<b>Example error message</b><br<br>This should not show up during runtime<br><br>Send me a message if you see this, along with what you did";
+                error_message_content.innerHTML = "<b>Example error message</b><br<br>This should not show up during runtime<br>Send me a message if you see this, along with what you did";
                 break;
             case 1:
-                error_message_content.innerHTML = "<b>Negative perma-losses</b><br><br>Likely cause: too many hospital units - try re-copying logs";
+                error_message_content.innerHTML = "<b>Negative perma-losses</b><br>Likely cause: too many hospital units - try re-copying logs";
                 break;
             case 2:
-                error_message_content.innerHTML = "<b>Empty output or incorrect formatting</b><br><br>Try enabling 'Also Show Defences' if there were only defence units killed";
+                error_message_content.innerHTML = "<b>Empty output or incorrect formatting</b><br>Try enabling 'Also Show Defences' if there were only defence units killed";
                 break;
         }
     }
 
     window.style.display = "block";
-    css_root_element.style.setProperty('cursor', 'default');
+    css_root.style.setProperty('cursor', 'default');
     current_window = window;
 
     setTimeout(() => {
@@ -382,22 +420,25 @@ function processData() {
 
     /* Array copies are used to avoid incorrect (previously set) data being used after being sorted */
 
-    let dead_unit_types = [].concat(dead_units_sorted[0]);
-    let dead_unit_losses = [].concat(dead_units_sorted[1]);
-    let dead_unit_times = [].concat(dead_units_sorted[2]);
-    let dead_attached_ids = [].concat(dead_units_sorted[3]);
+    let final_dead_units = JSON.parse(JSON.stringify(dead_units_sorted));
+    let final_hospital_units = JSON.parse(JSON.stringify(hospital_units_sorted));
 
-    let hospital_unit_types = [].concat(hospital_units_sorted[0]);
-    let hospital_unit_losses = [].concat(hospital_units_sorted[1]);
-    let hospital_unit_times = [].concat(hospital_units_sorted[2]);
-    let hospital_attached_ids = [].concat(hospital_units_sorted[3]);
+    let calculated_perma_losses = calculatePermaLosses(final_dead_units, final_hospital_units);
 
-    let find_perma = calculatePermaLosses(dead_units_sorted, hospital_units_sorted);
+    let dead_unit_types = JSON.parse(JSON.stringify(dead_units_sorted[0]));
+    let dead_unit_losses = JSON.parse(JSON.stringify(dead_units_sorted[1]));
+    let dead_unit_times = JSON.parse(JSON.stringify(dead_units_sorted[2]));
+    let dead_attached_ids = JSON.parse(JSON.stringify(dead_units_sorted[3]));
 
-    let perma_unit_types = find_perma[0];
-    let perma_unit_losses = find_perma[1];
-    let perma_unit_times = find_perma[2];
-    let perma_attached_ids = find_perma[3];
+    let hospital_unit_types = JSON.parse(JSON.stringify(hospital_units_sorted[0]));
+    let hospital_unit_losses = JSON.parse(JSON.stringify(hospital_units_sorted[1]));
+    let hospital_unit_times = JSON.parse(JSON.stringify(hospital_units_sorted[2]));
+    let hospital_attached_ids = JSON.parse(JSON.stringify(hospital_units_sorted[3]));
+
+    let perma_unit_types = calculated_perma_losses[0];
+    let perma_unit_losses = calculated_perma_losses[1];
+    let perma_unit_times = calculated_perma_losses[2];
+    let perma_attached_ids = calculated_perma_losses[3];
 
     let dead_unit_total = dead_unit_losses.reduce((partialSum, a) => partialSum + a, 0);
     let hospital_unit_total = hospital_unit_losses.reduce((partialSum, a) => partialSum + a, 0);
@@ -442,7 +483,8 @@ function processData() {
         output_text += "\nNo perma-losses recorded in attack ";
     }
 
-    line_counter.innerText = "Line count: " + (output_text.split(/\r\n|\r|\n/).length - 1)
+    num_rows = output_text.split(/\r\n|\r|\n/).length - 1;
+    line_counter.innerText = "Line count: " + (num_rows)
 
     fillOutput(output_text);
 }
@@ -485,14 +527,22 @@ function extractRawText(targetText, deadHospitalText, diedAddedText, terminator)
     return final_extracted_text;
 }
 
-function splitTextIntoData(targetText, unitSplitter, terminator) {
-    let target_text = targetText;
-    let last_terminator_occurrence = targetText.lastIndexOf(terminator);
+function splitTextIntoData(targetText, unitSplitter, lineTerminator) {
+    let target_text = ""; 
+    let terminator = "";
+
+    target_text = targetText;
+    terminator = lineTerminator;
+
+    let last_terminator_occurrence = target_text.lastIndexOf(terminator);
     let split_counter = 0;
-    let attack_times = [];
+
+
     let uncombined_losses = [];
     let uncombined_types = [];
+    let attack_times = [];
     let combined_array = [];
+    
 
     while (split_counter < last_terminator_occurrence) {
         let time_split_start = 0;
@@ -545,9 +595,13 @@ function splitTextIntoData(targetText, unitSplitter, terminator) {
 }
 
 function combineCommonUnitTypes(uncombinedUnitData) {
-    let uncombined_losses = uncombinedUnitData[0];
-    let uncombined_types = uncombinedUnitData[1];
-    let attack_times = uncombinedUnitData[2];
+    let uncombined_losses = [];
+    let uncombined_types = [];
+    let attack_times = [];
+
+    uncombined_losses = JSON.parse(JSON.stringify(uncombinedUnitData[0]));
+    uncombined_types = JSON.parse(JSON.stringify(uncombinedUnitData[1]));
+    attack_times = JSON.parse(JSON.stringify(uncombinedUnitData[2]));
 
     let losses = [];
     let types = [];
@@ -592,9 +646,9 @@ function combineCommonUnitTypes(uncombinedUnitData) {
             running_total = 0;
         }
     } else {
-        losses = [].concat(uncombinedUnitData[0]);
-        types = [].concat(uncombinedUnitData[1]);
-        times = [].concat(uncombinedUnitData[2]);
+        losses = JSON.parse(JSON.stringify(uncombined_losses));
+        types = JSON.parse(JSON.stringify(uncombined_types));
+        times = JSON.parse(JSON.stringify(attack_times));
     }
 
     overall.push(losses);
@@ -605,21 +659,25 @@ function combineCommonUnitTypes(uncombinedUnitData) {
 }
 
 function sortUnitData(unsortedUnitData) { 
-    let losses = unsortedUnitData[0];
-    let units = unsortedUnitData[1];
-    let times = unsortedUnitData[2];
+    let losses = [];
+    let units = [];
+    let times = [];
+
+    input_losses = structuredClone(unsortedUnitData[0]);
+    input_units = structuredClone(unsortedUnitData[1]);
+    input_times = structuredClone(unsortedUnitData[2]);
 
     let unit_list = [];
     let recombined_data = [];
     let id_list = [];
 
-    for (var i = 0; i < losses.length; i++) {
-        unit_list.push({'unit_name': units[i], 'units_lost': losses[i], 'attack_time': times[i]});
+    for (var i = 0; i < input_losses.length; i++) {
+        unit_list.push({'unit_name': input_units[i], 'units_lost': input_losses[i], 'attack_time': input_times[i]});
     }
 
     if (alphabetic_sorting_enabled) {
         unit_list.sort(function(a, b) {
-            return ((a.unit_name < b.unit_name) ? -1 : 0);
+            return a.unit_name.localeCompare(b.unit_name);
         });
     }
 
@@ -633,8 +691,6 @@ function sortUnitData(unsortedUnitData) {
     recombined_data.push(units);
     recombined_data.push(times);
 
-    console.log(recombined_data);
-
     for (var i = 0; i < losses.length; i++) {
         for (var j = 0; j < info_unit_names.length; j++) {
             if (losses[i] == info_unit_names[j]) id_list.push(j);
@@ -642,19 +698,17 @@ function sortUnitData(unsortedUnitData) {
             continue;
         }
     }
-
+    
     recombined_data.push(id_list);
 
-    for (var i = 0; i < recombined_data[0].length; i++) {
-        for (var j = 0; j < info_unit_defense_status.length; j++) {
-            if (!show_defences_enabled) {
-
+    if (!show_defences_enabled && show_properties_enabled) {
+        for (var i = 0; i < recombined_data[0].length; i++) {
+            for (var j = 0; j < info_unit_defense_status.length; j++) {
                 if (recombined_data[0][i] == info_unit_names[j] && info_unit_defense_status[j] == true) {
                     recombined_data[0].splice(i, 1);
                     recombined_data[1].splice(i, 1);
                     recombined_data[2].splice(i, 1);
                     recombined_data[3].splice(i, 1);
-
                     j = 0;
                 }
             }
@@ -665,31 +719,82 @@ function sortUnitData(unsortedUnitData) {
 }
 
 function calculatePermaLosses(deadData, hospitalData) {
-    let dead_data = [].concat(deadData);
-    let hospital_data = [].concat(hospitalData);
+    let dead_data = structuredClone(deadData);
+    let hospital_data = structuredClone(hospitalData);
 
-    for (var i = 0; i < dead_data[0].length; i++) {
-        for (var j = 0; j < hospital_data[0].length; j++) {
-            if (dead_data[0][i] == hospital_data[0][j]) {
-                dead_data[1][i] -= hospital_data[1][j];
+    if (combine_units_enabled) {
+        for (var i = 0; i < dead_data[0].length; i++) {
+            for (var j = 0; j < hospital_data[0].length; j++) {
+                if (dead_data[0][i] == hospital_data[0][j]) {
+                    dead_data[1][i] -= hospital_data[1][j];
+                }
             }
         }
-    }
 
-    let full_length = dead_data[0].length
-
-    for (var i = 0; i < full_length; i++) {
-        if (dead_data[1][i] == 0) {
-            dead_data[0].splice(i, 1);
-            dead_data[1].splice(i, 1);
-            dead_data[2].splice(i, 1);
-            dead_data[3].splice(i, 1);
-
-            i -= 1;
+        // remove entries with zero losses
+        for (let i = dead_data[0].length - 1; i >= 0; i--) {
+            if (dead_data[1][i] === 0) {
+                dead_data[0].splice(i, 1);
+                dead_data[1].splice(i, 1);
+                dead_data[2].splice(i, 1);
+                dead_data[3].splice(i, 1);
+            }
         }
-    }
 
-    return dead_data;
+        return dead_data;
+    
+    } else {
+        for (let j = 0; j < hospital_data[0].length; j++) {
+            let hospital_unit = hospital_data[0][j];
+            let hospital_count = hospital_data[1][j];
+            let hospital_time = hospital_data[2][j];
+
+            // find all matching dead unit indexes
+            let matching_indexes = [];
+            for (let i = 0; i < dead_data[0].length; i++) {
+                if (!merge_perma_enabled) {
+                    if (dead_data[0][i] === hospital_unit && dead_data[2][i] === hospital_time) {
+                    matching_indexes.push(i);
+                    }
+                } else {
+                    if (dead_data[0][i] === hospital_unit) {
+                    matching_indexes.push(i);
+                    }
+                }
+            }
+
+            let remaining_hospital_units = hospital_count;
+
+            let total_dead_for_unit = matching_indexes.reduce((sum, i) => sum + dead_data[1][i], 0);
+            if (total_dead_for_unit === 0) continue;
+
+            for (let i of matching_indexes) {
+                if (remaining_hospital_units <= 0) break; // no more hospital units to subtract
+
+                if (dead_data[1][i] <= remaining_hospital_units) {
+                    // subtract all dead units at i
+                    remaining_hospital_units -= dead_data[1][i];
+                    dead_data[1][i] = 0;
+                } else {
+                    // subtract only part of dead units at i
+                    dead_data[1][i] -= remaining_hospital_units;
+                    remaining_hospital_units = 0;
+                }
+            }
+        }
+
+        // remove entries with zero losses
+        for (let i = dead_data[0].length - 1; i >= 0; i--) {
+            if (dead_data[1][i] === 0) {
+                dead_data[0].splice(i, 1);
+                dead_data[1].splice(i, 1);
+                dead_data[2].splice(i, 1);
+                dead_data[3].splice(i, 1);
+            }
+        }
+
+        return dead_data;
+    }
 }
 
 function createUnitList(types, losses, times = null, multiply_modifier, display_status, info_ids = null, perma = false) {
@@ -712,7 +817,7 @@ function createUnitList(types, losses, times = null, multiply_modifier, display_
             total_combined_power += combined_power;
         }
 
-        if (!perma && show_time_enabled && time_style == 1) {
+        if (!perma && show_time_enabled && time_style == 1 || !combine_units_enabled && show_time_enabled && time_style == 1) {
             if (current_time.toString() != time.toString()) {
                 if (attack_no != 1) {text += "\n\n"}
                 text += "Attack " + attack_no + " @ " + time + ":\n";
@@ -723,10 +828,10 @@ function createUnitList(types, losses, times = null, multiply_modifier, display_
         }
 
         if (display_status == 1) {
-            if (!perma && show_time_enabled && time_style == 0) { text += "[" + time + "] "; }
+            if (!perma && show_time_enabled && time_style == 0 || !combine_units_enabled && show_time_enabled && time_style == 0) { text += "[" + time + "] "; }
             text +=  "[T" + unit_tier + "] " + unit_types + " x " + unit_losses + "\n";
         } else {
-            if (!perma && show_time_enabled && time_style == 0) { text += "[" + time + "] "; }
+            if (!perma && show_time_enabled && time_style == 0 || !combine_units_enabled && show_time_enabled && time_style == 0)  { text += "[" + time + "] "; }
             text += unit_types + " x " + unit_losses + "\n";
         }
 
